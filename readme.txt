@@ -4,7 +4,7 @@ Tags: security, bot protection, vpn, proxy, tor
 Requires at least: 6.0
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 0.1.0
+Stable tag: 0.1.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -47,7 +47,7 @@ Choose Cloudflare or X-Forwarded-For under Visitor IP. Proxy headers are only re
 == Installation ==
 
 1. Install and activate the plugin.
-2. Create an API key at [ipscanner.io](https://ipscanner.io/dashboard).
+2. Create an API key at [ipscanner.io](https://ipscanner.io/dashboard/apikeys).
 3. Go to Settings > IPScanner, paste the key and click Test connection.
 4. Optional: create a site in the [IPScanner dashboard](https://ipscanner.io/dashboard/sites) and paste its Site ID.
 5. Choose the protected areas. Leave the mode on Monitor for a few days, check Recent decisions, then switch to Enforce.
@@ -101,6 +101,9 @@ Privacy policy: https://ipscanner.io/privacy
 4. Recent decisions on the dashboard.
 
 == Changelog ==
+
+= 0.1.1 =
+* API key link opens the API keys page.
 
 = 0.1.0 =
 * First release: visitor checks with monitor and enforce modes, dashboard site policy, login, registration, password reset, comment, WooCommerce, Contact Form 7 and WPForms protection, allowlist, trusted proxies, recent decisions.

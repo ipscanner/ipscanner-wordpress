@@ -175,7 +175,7 @@ final class IPScanner_Admin {
 						printf(
 							/* translators: %s: link to ipscanner.io */
 							esc_html__( 'No API key yet. Visitors are not checked. Get a key at %s.', 'ipscanner' ),
-							'<a href="https://ipscanner.io/dashboard" target="_blank" rel="noopener">ipscanner.io</a>'
+							'<a href="https://ipscanner.io/dashboard/apikeys" target="_blank" rel="noopener">ipscanner.io</a>'
 						);
 					} else {
 						submit_button( __( 'Test connection', 'ipscanner' ), 'secondary', 'ipscanner_test', false );

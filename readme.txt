@@ -4,7 +4,7 @@ Tags: security, bot protection, vpn, proxy, tor
 Requires at least: 6.0
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 0.1.1
+Stable tag: 0.1.2
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -48,9 +48,9 @@ Choose Cloudflare or X-Forwarded-For under Visitor IP. Proxy headers are only re
 
 1. Install and activate the plugin.
 2. Create an API key at [ipscanner.io](https://ipscanner.io/dashboard/apikeys).
-3. Go to Settings > IPScanner, paste the key and click Test connection.
-4. Optional: create a site in the [IPScanner dashboard](https://ipscanner.io/dashboard/sites) and paste its Site ID.
-5. Choose the protected areas. Leave the mode on Monitor for a few days, check Recent decisions, then switch to Enforce.
+3. Go to Settings > IPScanner, paste the key and choose what to protect.
+4. Optional: create a site in the [IPScanner dashboard](https://ipscanner.io/dashboard/sites) and paste its Site ID under Settings.
+5. Leave the mode on Monitor for a few days, check the Overview tab, then switch to Enforce.
 
 The key can also be set in wp-config.php with `define( 'IPSCANNER_API_KEY', 'pk_live_...' );`.
 
@@ -84,23 +84,32 @@ A first visit waits for one API call (usually well under a second). Repeat visit
 
 This plugin connects to the IPScanner API at https://ipscanner.io, run by IPScanner. It is required for the plugin to work.
 
-* When a protected form is submitted, or a page is viewed with whole site protection on, the plugin sends the visitor's IP address, user agent and these request headers: Accept, Accept-Language, Accept-Encoding, Sec-CH-UA and Sec-Fetch headers. It also sends your Site ID when one is set. Endpoint: `POST /v1/edge/check`. Results are cached on your site for 10 minutes per visitor.
+* When a protected form is submitted, or a page is viewed with whole site protection on, the plugin sends the visitor's IP address, user agent and these request headers: Accept, Accept-Language, Accept-Encoding, Sec-CH-UA and Sec-Fetch headers. It also sends a random request ID and your Site ID when one is set. Endpoint: `POST /v1/edge/check`. Results are cached on your site for 10 minutes per visitor.
 * With a Site ID set, the plugin reads the site's policy (no visitor data) at most every 30 seconds. Endpoint: `GET /v1/sites/{site}/policy`.
-* When an administrator clicks Test connection, the plugin reads the plan and usage of the API key. Endpoint: `GET /v1/usage/summary`.
+* When an administrator opens Settings > IPScanner (at most every 5 minutes) or clicks Test connection, the plugin reads the plan and usage of the API key (no visitor data). Endpoint: `GET /v1/usage/summary`.
 
 Nothing is sent before an API key is saved.
 
 Terms of service: https://ipscanner.io/terms
 Privacy policy: https://ipscanner.io/privacy
 
+Source code: https://github.com/ipscanner/ipscanner-wordpress
+
 == Screenshots ==
 
-1. Settings > IPScanner.
-2. The block page a blocked visitor sees.
-3. A blocked login attempt.
-4. Recent decisions on the dashboard.
+1. Getting started.
+2. Overview: connection, last 24 hours and recent decisions.
+3. Settings.
+4. The block page a blocked visitor sees.
+5. A blocked login attempt.
 
 == Changelog ==
+
+= 0.1.2 =
+* Overview tab with connection status, the last 24 hours and recent decisions.
+* Getting started card for new sites.
+* Settings grouped into sections.
+* The "Protected by IPScanner" link on the block page is now off by default.
 
 = 0.1.1 =
 * API key link opens the API keys page.

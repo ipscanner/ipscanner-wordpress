@@ -40,7 +40,7 @@ final class IPScanner_Settings {
 			'ip_source'       => IPScanner_Request::SOURCE_REMOTE_ADDR,
 			'trusted_proxies' => '',
 			'block_message'   => '',
-			'show_credit'     => true,
+			'show_credit'     => false,
 			'timeout'         => 1.5,
 		);
 	}

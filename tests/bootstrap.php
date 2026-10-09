@@ -13,3 +13,4 @@ require_once __DIR__ . '/../includes/class-ipscanner-ip.php';
 require_once __DIR__ . '/../includes/class-ipscanner-request.php';
 require_once __DIR__ . '/../includes/class-ipscanner-policy.php';
 require_once __DIR__ . '/../includes/class-ipscanner-api.php';
+require_once __DIR__ . '/../includes/class-ipscanner-stats.php';

@@ -15,9 +15,9 @@ import { chromium } from 'playwright';
 const URL_BASE = process.env.WP_URL || 'http://localhost:8888';
 const SHOTS = process.env.SHOTS || 'test-results';
 const KEY = readFileSync(process.env.IPSCANNER_KEY_FILE, 'utf8').trim();
-const CONTAINER = execSync("docker ps --format '{{.Names}}'", { encoding: 'utf8' })
-	.split('\n')
-	.find((n) => n.startsWith('wp-env-ipscanner') && n.endsWith('-wordpress-1'));
+const CONTAINERS = execSync("docker ps --format '{{.Names}}'", { encoding: 'utf8' }).split('\n');
+const CONTAINER = CONTAINERS.find((n) => n.startsWith('wp-env-ipscanner') && n.endsWith('-wordpress-1'));
+const CLI = CONTAINERS.find((n) => n.startsWith('wp-env-ipscanner') && n.endsWith('-cli-1')) || CONTAINER;
 const PROXY = process.env.PROXY_IP || '172.18.0.1';
 mkdirSync(SHOTS, { recursive: true });
 
@@ -33,7 +33,7 @@ const P = {
 const MESSAGE = 'Your request was blocked. If you think this is a mistake, contact the site owner.';
 
 function wp(...args) {
-	return execFileSync('docker', ['exec', '-u', '501', '-e', 'HOME=/tmp', '-w', '/var/www/html', CONTAINER, 'wp', ...args], {
+	return execFileSync('docker', ['exec', '-u', '501', '-e', 'HOME=/tmp', '-w', '/var/www/html', CLI, 'wp', ...args], {
 		encoding: 'utf8',
 		stdio: ['ignore', 'pipe', 'pipe'],
 	}).trim();
@@ -53,7 +53,7 @@ function setSettings(patch) {
 
 function reset() {
 	wp('transient', 'delete', '--all');
-	wp('eval', 'delete_option("ipscanner_log"); delete_option("ipscanner_policy_cache"); delete_option("ipscanner_last_error");');
+	wp('eval', 'delete_option("ipscanner_log"); delete_option("ipscanner_stats"); delete_option("ipscanner_policy_cache"); delete_option("ipscanner_last_error");');
 }
 
 function log() {
@@ -175,11 +175,34 @@ setSettings({ api_key: '', mode: 'enforce', areas: ['site', 'login', 'register',
 	await l.ctx.close();
 }
 
-// 2. Settings page: save key and proxy settings through the form, test the connection.
+// 2. Onboarding: key, connection test and areas from the welcome card.
 wp('option', 'delete', 'ipscanner_settings');
+wp('option', 'delete', 'ipscanner_onboarding');
 {
 	const { ctx, page } = await adminContext();
 	await page.goto('/wp-admin/options-general.php?page=ipscanner');
+	record('onboarding: welcome card without a key', 'Get a free API key', await page.locator('.ipscanner-welcome').textContent());
+	await page.fill('#ipscanner-onboard-key', 'pk_live_rejected');
+	await Promise.all([page.waitForLoadState('load'), page.click('.ipscanner-inline-form button')]);
+	record('onboarding: rejected key shown in the card', 'The API key was rejected.', await page.locator('.ipscanner-welcome').textContent());
+	await page.fill('#ipscanner-onboard-key', KEY);
+	await Promise.all([page.waitForLoadState('load'), page.click('.ipscanner-inline-form button')]);
+	record('onboarding: key connected', 'Connected', await page.locator('.ipscanner-step').nth(1).textContent());
+	record('onboarding: key not in page source', 'false', String((await page.content()).includes(KEY)));
+	await page.uncheck('input[name="areas[]"][value="comments"]');
+	await Promise.all([page.waitForLoadState('load'), page.click('.ipscanner-step.is-current button[type=submit]')]);
+	record('onboarding: overview after the last step', 'Connected', await page.locator('.ipscanner-status').textContent());
+	const saved = settings();
+	record('onboarding: comments unchecked', 'false', String(saved.areas.includes('comments')));
+	record('onboarding: other areas kept', 'true', String(saved.areas.includes('lostpassword') && saved.areas.includes('forms')));
+	await ctx.close();
+}
+
+// 3. Settings page: save key and proxy settings through the form, test the connection.
+wp('option', 'delete', 'ipscanner_settings');
+{
+	const { ctx, page } = await adminContext();
+	await page.goto('/wp-admin/options-general.php?page=ipscanner&tab=settings');
 	await page.fill('#ipscanner-api-key', KEY);
 	await page.selectOption('#ipscanner-ip-source', 'cloudflare');
 	await page.fill('#ipscanner-trusted', `${PROXY}\nnot-an-ip`);
@@ -190,6 +213,7 @@ wp('option', 'delete', 'ipscanner_settings');
 	record('settings: invalid proxy entry reported', 'not-an-ip', notices.join(' | '));
 	await page.fill('#ipscanner-trusted', PROXY);
 	await save(page);
+	record('settings: stays on the settings tab', 'tab=settings', page.url());
 	record('settings: saved', 'Settings saved', (await page.locator('.notice, .updated').allTextContents()).join(' | '));
 	const saved = settings();
 	record('settings: key stored', 'true', String(saved.api_key === KEY));
@@ -204,7 +228,7 @@ wp('option', 'delete', 'ipscanner_settings');
 	await ctx.close();
 }
 
-// 3. Monitor mode records but never blocks.
+// 4. Monitor mode records but never blocks.
 reset();
 const expectMonitor = { tor: 'would_block', vpn: 'would_block', hosting: 'allow', residential: 'allow', headless: 'would_block' };
 for (const [persona, action] of Object.entries(expectMonitor)) {
@@ -215,7 +239,7 @@ for (const [persona, action] of Object.entries(expectMonitor)) {
 }
 record('monitor: decisions logged', 5, log().length);
 
-// 4. Enforce mode blocks the selected classes with the 403 page.
+// 5. Enforce mode blocks the selected classes with the 403 page.
 setSettings({ mode: 'enforce', block_classes: ['malicious_automation', 'tor', 'vpn'] });
 const expectEnforce = { tor: 403, vpn: 403, hosting: 200, residential: 200, headless: 403 };
 for (const [persona, status] of Object.entries(expectEnforce)) {
@@ -223,7 +247,7 @@ for (const [persona, status] of Object.entries(expectEnforce)) {
 	record(`enforce: ${persona} status`, status, r.status);
 	if (persona === 'tor') {
 		record('enforce: block page message', MESSAGE, r.body);
-		record('enforce: block page credit', 'Protected by IPScanner', r.body);
+		record('enforce: no credit link by default', 'false', String(r.body.includes('Protected by IPScanner')));
 		await r.page.screenshot({ path: `${SHOTS}/block-page.png` });
 	}
 	await r.ctx.close();
@@ -233,16 +257,24 @@ for (const [persona, status] of Object.entries(expectEnforce)) {
 	record('enforce: missing static file gets the normal 404, not a check', 404, r.status);
 	await r.ctx.close();
 }
-setSettings({ block_message: 'Custom block text.', show_credit: false });
+setSettings({ block_message: 'Custom block text.', show_credit: true });
 {
 	const r = await visit('tor');
 	record('enforce: custom message', 'Custom block text.', r.body);
-	record('enforce: credit hidden', 'false', String(r.body.includes('Protected by IPScanner')));
+	record('enforce: credit shown when turned on', 'Protected by IPScanner', r.body);
 	await r.ctx.close();
 }
-setSettings({ block_message: '', show_credit: true });
+setSettings({ block_message: '', show_credit: false });
+{
+	const { ctx, page } = await adminContext();
+	await page.goto('/wp-admin/options-general.php?page=ipscanner');
+	const numbers = (await page.locator('.ipscanner-number').allTextContents()).map((t) => t.replace(/\s+/g, ' ').trim());
+	record('overview: last 24 hours', 'Blocked', numbers.join(' | '));
+	record('overview: recent decisions', 'true', String((await page.locator('.ipscanner-log tbody tr').count()) > 0));
+	await ctx.close();
+}
 
-// 5. Spoofing: proxy headers are ignored unless the peer is trusted.
+// 6. Spoofing: proxy headers are ignored unless the peer is trusted.
 setSettings({ ip_source: 'remote_addr' });
 {
 	const r = await visit('tor');
@@ -263,7 +295,7 @@ setSettings({ ip_source: 'cloudflare', trusted_proxies: '' });
 }
 setSettings({ trusted_proxies: PROXY });
 
-// 6. Allowlist and administrators.
+// 7. Allowlist and administrators.
 setSettings({ allowlist: '185.220.101.0/24' });
 {
 	const r = await visit('tor');
@@ -291,7 +323,7 @@ setSettings({ allow_admins: false });
 }
 setSettings({ allow_admins: true });
 
-// 7. Forms: errors instead of a 403.
+// 8. Forms: errors instead of a 403.
 setSettings({ areas: ['login', 'register', 'lostpassword', 'comments', 'woo_checkout', 'woo_register', 'forms'] });
 {
 	const l = await login('tor', 'e2esub', 'Sub-pass-123');
@@ -414,7 +446,7 @@ setSettings({ mode: 'monitor' });
 	await l.ctx.close();
 }
 
-// 8. Site policy from the dashboard.
+// 9. Site policy from the dashboard.
 if (process.env.SITE_HELPER) {
 	const helper = createRequire(import.meta.url)(process.env.SITE_HELPER);
 	await helper.setPolicy({ malicious_automation: 'block', tor: 'block' }, 'enforce');
@@ -449,7 +481,7 @@ if (process.env.SITE_HELPER) {
 	record('site policy: dashboard monitor mode stops blocking', 200, status);
 	{
 		const { ctx, page } = await adminContext();
-		await page.goto('/wp-admin/options-general.php?page=ipscanner');
+		await page.goto('/wp-admin/options-general.php?page=ipscanner&tab=settings');
 		await Promise.all([page.waitForLoadState('load'), page.click('text=Test connection')]);
 		await page.waitForSelector('.notice-success, .notice-error');
 		record('site policy: test connection shows site', helper.siteId, (await page.locator('.notice-success, .notice-error').allTextContents()).join(' | '));
@@ -459,7 +491,7 @@ if (process.env.SITE_HELPER) {
 	setSettings({ site_id: '' });
 }
 
-// 9. Slow API: the timeout applies and the visitor is let through.
+// 10. Slow API: the timeout applies and the visitor is let through.
 const slow = http.createServer((req, res) => setTimeout(() => res.end('{}'), 5000)).listen(3059);
 const realBase = wp('config', 'get', 'IPSCANNER_API_BASE');
 wp('config', 'set', 'IPSCANNER_API_BASE', 'http://host.docker.internal:3059');
@@ -478,7 +510,7 @@ reset();
 wp('config', 'set', 'IPSCANNER_API_BASE', realBase);
 slow.close();
 
-// 10. API down.
+// 11. API down.
 if (process.env.API_STOP) {
 	execSync(process.env.API_STOP);
 	reset();

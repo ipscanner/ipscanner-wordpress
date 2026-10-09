@@ -205,6 +205,7 @@ final class IPScanner_Guard {
 					'decision' => $result['decision'],
 				)
 			);
+			IPScanner_Stats::add( $result['class'], $result['decision'] );
 		}
 		return $result;
 	}

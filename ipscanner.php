@@ -27,6 +27,7 @@ require_once IPSCANNER_DIR . 'includes/class-ipscanner-request.php';
 require_once IPSCANNER_DIR . 'includes/class-ipscanner-policy.php';
 require_once IPSCANNER_DIR . 'includes/class-ipscanner-settings.php';
 require_once IPSCANNER_DIR . 'includes/class-ipscanner-log.php';
+require_once IPSCANNER_DIR . 'includes/class-ipscanner-stats.php';
 require_once IPSCANNER_DIR . 'includes/class-ipscanner-api.php';
 require_once IPSCANNER_DIR . 'includes/class-ipscanner-guard.php';
 require_once IPSCANNER_DIR . 'includes/class-ipscanner-admin.php';

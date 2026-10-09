@@ -1,0 +1,407 @@
+/* IPScanner admin: Settings > IPScanner and the dashboard widget. */
+
+.ipscanner {
+	--ipscanner-accent: var(--wp-admin-theme-color, #2271b1);
+	--ipscanner-border: #dcdcde;
+	--ipscanner-muted: #646970;
+	--ipscanner-ok: #00a32a;
+	--ipscanner-error: #d63638;
+	--ipscanner-warn: #dba617;
+}
+
+.ipscanner-title {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+}
+
+.ipscanner-mark {
+	flex: none;
+	display: block;
+}
+
+.ipscanner .nav-tab-wrapper {
+	margin-bottom: 20px;
+}
+
+.ipscanner-muted {
+	color: var(--ipscanner-muted, #646970);
+}
+
+/* Panels */
+
+.ipscanner-panel,
+.ipscanner-welcome {
+	background: #fff;
+	border: 1px solid var(--ipscanner-border);
+	border-radius: 8px;
+	padding: 16px 20px;
+	max-width: 960px;
+	box-sizing: border-box;
+}
+
+.ipscanner-panel p {
+	margin: 0 0 6px;
+}
+
+.ipscanner-panel p:last-child {
+	margin-bottom: 0;
+}
+
+/* Status line */
+
+.ipscanner-status-line {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 6px 12px;
+	font-size: 14px;
+}
+
+.ipscanner-dot {
+	width: 10px;
+	height: 10px;
+	border-radius: 50%;
+	background: #a7aaad;
+	flex: none;
+}
+
+.ipscanner-dot.is-ok {
+	background: #00a32a;
+	box-shadow: 0 0 0 3px rgba(0, 163, 42, 0.15);
+}
+
+.ipscanner-dot.is-error {
+	background: #d63638;
+	box-shadow: 0 0 0 3px rgba(214, 54, 56, 0.15);
+}
+
+.ipscanner-usage {
+	display: inline-flex;
+	align-items: center;
+	gap: 8px;
+	color: #646970;
+}
+
+.ipscanner-bar {
+	display: inline-block;
+	width: 120px;
+	height: 6px;
+	border-radius: 3px;
+	background: #f0f0f1;
+	overflow: hidden;
+}
+
+.ipscanner-bar span {
+	display: block;
+	height: 100%;
+	border-radius: 3px;
+	background: var(--wp-admin-theme-color, #2271b1);
+}
+
+.ipscanner-status-mode {
+	color: #50575e;
+}
+
+/* Last 24 hours */
+
+.ipscanner-numbers {
+	display: grid;
+	grid-template-columns: repeat(3, minmax(0, 1fr));
+	gap: 12px;
+	max-width: 960px;
+}
+
+.ipscanner-number {
+	background: #fff;
+	border: 1px solid #dcdcde;
+	border-radius: 8px;
+	padding: 14px 16px;
+	min-width: 0;
+}
+
+.ipscanner-number-value {
+	display: block;
+	font-size: 26px;
+	line-height: 1.2;
+	font-weight: 600;
+	color: #1d2327;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+.ipscanner-number-value.is-text {
+	font-size: 18px;
+	line-height: 1.75;
+}
+
+.ipscanner-number-label {
+	display: block;
+	margin-top: 2px;
+	color: #646970;
+}
+
+/* Recent decisions */
+
+.ipscanner-table-wrap {
+	max-width: 960px;
+	overflow-x: auto;
+}
+
+.ipscanner-log td,
+.ipscanner-log th {
+	white-space: nowrap;
+}
+
+.ipscanner-chip {
+	display: inline-block;
+	padding: 1px 8px;
+	border-radius: 10px;
+	font-size: 12px;
+	line-height: 18px;
+	background: #f0f0f1;
+	color: #50575e;
+}
+
+.ipscanner-chip.is-block {
+	background: #fcf0f1;
+	color: #8a2424;
+}
+
+.ipscanner-chip.is-warn {
+	background: #fcf9e8;
+	color: #614200;
+}
+
+.ipscanner-chip.is-allow {
+	background: #edfaef;
+	color: #005c12;
+}
+
+/* Settings sections */
+
+.ipscanner-settings h2 {
+	margin-top: 28px;
+	padding-bottom: 8px;
+	border-bottom: 1px solid #dcdcde;
+	max-width: 960px;
+}
+
+.ipscanner-settings h2:first-of-type {
+	margin-top: 8px;
+}
+
+/* Onboarding */
+
+.ipscanner-welcome {
+	padding: 24px 28px 28px;
+}
+
+.ipscanner-welcome-head {
+	display: flex;
+	align-items: center;
+	gap: 14px;
+	margin-bottom: 22px;
+}
+
+.ipscanner-welcome-head h2 {
+	margin: 0;
+	font-size: 20px;
+	line-height: 1.3;
+	flex: 1;
+}
+
+.ipscanner-welcome-skip {
+	margin: 0;
+}
+
+.ipscanner-steps {
+	display: grid;
+	grid-template-columns: repeat(3, minmax(0, 1fr));
+	gap: 16px;
+	margin: 0;
+	padding: 0;
+	list-style: none;
+	counter-reset: ipscanner-step;
+}
+
+.ipscanner-step {
+	position: relative;
+	margin: 0;
+	padding: 18px 18px 16px;
+	border: 1px solid #dcdcde;
+	border-radius: 8px;
+	background: #fff;
+	counter-increment: ipscanner-step;
+	min-width: 0;
+}
+
+.ipscanner-step h3 {
+	margin: 10px 0 12px;
+	font-size: 14px;
+	line-height: 1.4;
+}
+
+.ipscanner-step h3::before {
+	content: counter(ipscanner-step) ". ";
+	color: #646970;
+	font-weight: 400;
+}
+
+.ipscanner-step p {
+	margin: 0 0 8px;
+}
+
+.ipscanner-step-icon {
+	width: 32px;
+	height: 32px;
+	font-size: 20px;
+	line-height: 32px;
+	text-align: center;
+	border-radius: 50%;
+	background: #f0f0f1;
+	color: #50575e;
+}
+
+.ipscanner-step.is-current {
+	border-color: var(--wp-admin-theme-color, #2271b1);
+	box-shadow: 0 0 0 1px var(--wp-admin-theme-color, #2271b1);
+}
+
+.ipscanner-step.is-current .ipscanner-step-icon {
+	background: var(--wp-admin-theme-color, #2271b1);
+	color: #fff;
+}
+
+.ipscanner-step.is-done {
+	background: #f6f7f7;
+}
+
+.ipscanner-step.is-done .ipscanner-step-icon {
+	background: transparent;
+	color: #00a32a;
+	font-size: 28px;
+}
+
+.ipscanner-step.is-done h3 {
+	color: #646970;
+}
+
+.ipscanner-step-note {
+	color: #646970;
+}
+
+.ipscanner-step-error {
+	color: #d63638;
+}
+
+.ipscanner-inline-form {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 8px;
+	margin-bottom: 8px;
+}
+
+.ipscanner-inline-form .regular-text {
+	width: auto;
+	flex: 1 1 140px;
+	min-width: 0;
+}
+
+.ipscanner-step fieldset label {
+	display: block;
+	margin: 0 0 6px;
+}
+
+.ipscanner-step fieldset[disabled] {
+	opacity: 0.55;
+}
+
+.ipscanner-step fieldset p {
+	margin-top: 10px;
+}
+
+/* Dashboard widget */
+
+#ipscanner .ipscanner-status-line {
+	font-size: 13px;
+}
+
+#ipscanner .ipscanner-numbers {
+	gap: 8px;
+	margin: 12px 0;
+}
+
+#ipscanner .ipscanner-number {
+	padding: 10px 12px;
+}
+
+#ipscanner .ipscanner-number-value {
+	font-size: 20px;
+}
+
+#ipscanner .ipscanner-number-value.is-text {
+	font-size: 14px;
+	line-height: 1.35;
+	white-space: normal;
+}
+
+#ipscanner .ipscanner-usage .ipscanner-bar {
+	display: none;
+}
+
+#ipscanner .ipscanner-status-mode {
+	margin: 4px 0 0;
+}
+
+@media screen and (max-width: 782px) {
+	.ipscanner-steps {
+		grid-template-columns: minmax(0, 1fr);
+	}
+
+	.ipscanner-welcome {
+		padding: 18px 16px 20px;
+	}
+
+	.ipscanner-welcome-head h2 {
+		font-size: 17px;
+	}
+
+	.ipscanner-numbers {
+		gap: 8px;
+	}
+
+	.ipscanner-number {
+		padding: 10px 12px;
+	}
+
+	.ipscanner-number-value {
+		font-size: 20px;
+	}
+
+	.ipscanner-number-value.is-text {
+		font-size: 14px;
+		line-height: 1.35;
+		white-space: normal;
+	}
+
+	.ipscanner-bar {
+		width: 80px;
+	}
+
+	.ipscanner-log td,
+	.ipscanner-log th {
+		white-space: normal;
+	}
+
+	.ipscanner-log .column-where {
+		display: none;
+	}
+
+	.ipscanner-log code {
+		font-size: 12px;
+		padding: 0 2px;
+		white-space: nowrap;
+	}
+}

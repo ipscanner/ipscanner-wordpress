@@ -194,6 +194,7 @@ final class IPScanner_Settings {
 			delete_option( 'ipscanner_policy_cache' );
 			delete_option( 'ipscanner_last_error' );
 			delete_transient( 'ipscanner_backoff' );
+			delete_transient( 'ipscanner_usage' );
 		}
 
 		return $out;

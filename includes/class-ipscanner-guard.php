@@ -266,6 +266,7 @@ final class IPScanner_Guard {
 		if ( ! headers_sent() ) {
 			header( 'Content-Type: text/html; charset=' . get_option( 'blog_charset' ) );
 		}
+		wp_register_style( 'ipscanner-block-page', plugins_url( 'css/block-page.css', IPSCANNER_FILE ), array(), IPSCANNER_VERSION );
 		$ipscanner_message = $this->message();
 		$ipscanner_credit  = (bool) $this->settings->get( 'show_credit' );
 		include IPSCANNER_DIR . 'templates/block-page.php';

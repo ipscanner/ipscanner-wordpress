@@ -115,7 +115,8 @@ final class IPScanner_Guard {
 			return null;
 		}
 
-		$ip = IPScanner_Request::client_ip( $_SERVER, (string) $this->settings->get( 'ip_source' ), $this->settings->trusted_proxies() );
+		$server = IPScanner_Request::server_vars();
+		$ip     = IPScanner_Request::client_ip( $server, (string) $this->settings->get( 'ip_source' ), $this->settings->trusted_proxies() );
 		if ( '' === $ip || ! IPScanner_IP::is_public( $ip ) ) {
 			return null;
 		}
@@ -147,7 +148,7 @@ final class IPScanner_Guard {
 		}
 
 		$user_agent = isset( $_SERVER['HTTP_USER_AGENT'] ) ? substr( sanitize_text_field( wp_unslash( $_SERVER['HTTP_USER_AGENT'] ) ), 0, 512 ) : '';
-		$outcome    = $this->api->edge_check( $ip, $user_agent, IPScanner_Request::forwarded_headers( $_SERVER ) );
+		$outcome    = $this->api->edge_check( $ip, $user_agent, IPScanner_Request::forwarded_headers( $server ) );
 
 		if ( ! $outcome['ok'] ) {
 			if ( 'backoff' !== $outcome['status'] ) {

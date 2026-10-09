@@ -47,6 +47,51 @@ final class IPScanner_Request {
 	);
 
 	/**
+	 * The $_SERVER entries the plugin reads.
+	 *
+	 * @var string[]
+	 */
+	const SERVER_KEYS = array(
+		'REMOTE_ADDR',
+		'HTTP_CF_CONNECTING_IP',
+		'HTTP_X_FORWARDED_FOR',
+		'HTTP_ACCEPT',
+		'HTTP_ACCEPT_LANGUAGE',
+		'HTTP_ACCEPT_ENCODING',
+		'HTTP_SEC_CH_UA',
+		'HTTP_SEC_CH_UA_MOBILE',
+		'HTTP_SEC_CH_UA_PLATFORM',
+		'HTTP_SEC_CH_UA_PLATFORM_VERSION',
+		'HTTP_SEC_CH_UA_ARCH',
+		'HTTP_SEC_CH_UA_BITNESS',
+		'HTTP_SEC_CH_UA_MODEL',
+		'HTTP_SEC_CH_UA_FULL_VERSION',
+		'HTTP_SEC_CH_UA_FULL_VERSION_LIST',
+		'HTTP_SEC_CH_UA_WOW64',
+		'HTTP_SEC_CH_UA_FORM_FACTORS',
+		'HTTP_SEC_FETCH_SITE',
+		'HTTP_SEC_FETCH_MODE',
+		'HTTP_SEC_FETCH_USER',
+		'HTTP_SEC_FETCH_DEST',
+		'HTTP_SEC_FETCH_STORAGE_ACCESS',
+	);
+
+	/**
+	 * The sanitized $_SERVER entries listed in SERVER_KEYS.
+	 *
+	 * @return array<string,string>
+	 */
+	public static function server_vars() {
+		$out = array();
+		foreach ( self::SERVER_KEYS as $key ) {
+			if ( isset( $_SERVER[ $key ] ) ) {
+				$out[ $key ] = sanitize_text_field( wp_unslash( $_SERVER[ $key ] ) );
+			}
+		}
+		return $out;
+	}
+
+	/**
 	 * The visitor's address. Proxy headers are read only when the direct peer
 	 * (REMOTE_ADDR) is a trusted proxy, so visitors cannot spoof them.
 	 *
@@ -94,7 +139,7 @@ final class IPScanner_Request {
 	}
 
 	/**
-	 * The request headers Agentscan reads: Accept, Accept-Language,
+	 * The request headers the edge check reads: Accept, Accept-Language,
 	 * Accept-Encoding, Sec-CH-UA* and Sec-Fetch-*.
 	 *
 	 * @param array $server $_SERVER style array.

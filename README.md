@@ -2,8 +2,6 @@
 
 WordPress plugin that checks visitors with [IPScanner](https://ipscanner.io) and blocks bots, Tor, VPN and proxy traffic on login, registration, password reset, comments, WooCommerce checkout and registration, Contact Form 7 and WPForms, and optionally the whole front end.
 
-It makes the same edge check as the [Cloudflare Worker](https://github.com/ipscanner/ipscanner-cloudflare) (`POST /v1/edge/check`, 2 request units per uncached visitor) and can follow a site's policy from the [dashboard](https://ipscanner.io/dashboard/sites).
-
 ## Install
 
 Download `ipscanner.zip` from [Releases](https://github.com/ipscanner/ipscanner-wordpress/releases), then Plugins > Add New > Upload Plugin. Go to Settings > IPScanner, paste your API key and Site ID, and choose the protected areas.

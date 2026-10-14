@@ -1,10 +1,10 @@
-=== IPScanner ===
+=== IPScanner – Block Bots, VPNs & Proxies ===
 Contributors: ipscanner
 Tags: security, bot protection, vpn, proxy, tor
 Requires at least: 6.0
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 0.1.2
+Stable tag: 0.1.3
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -104,6 +104,9 @@ Source code: https://github.com/ipscanner/ipscanner-wordpress
 5. A blocked login attempt.
 
 == Changelog ==
+
+= 0.1.3 =
+* Plugin renamed to "IPScanner – Block Bots, VPNs & Proxies".
 
 = 0.1.2 =
 * Overview tab with connection status, the last 24 hours and recent decisions.

@@ -15,17 +15,17 @@ defined( 'ABSPATH' ) || exit;
 <meta charset="<?php echo esc_attr( get_option( 'blog_charset' ) ); ?>">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex, nofollow">
-<title><?php esc_html_e( 'Access denied', 'ipscanner' ); ?></title>
+<title><?php esc_html_e( 'Access denied', 'ipscanner-bot-blocker' ); ?></title>
 <?php wp_print_styles( 'ipscanner-block-page' ); ?>
 </head>
 <body>
 <main>
-<h1><?php esc_html_e( 'Access denied', 'ipscanner' ); ?></h1>
+<h1><?php esc_html_e( 'Access denied', 'ipscanner-bot-blocker' ); ?></h1>
 <p><?php echo nl2br( esc_html( $ipscanner_message ) ); ?></p>
 <p class="site"><a href="<?php echo esc_url( home_url( '/' ) ); ?>"><?php echo esc_html( get_bloginfo( 'name' ) ); ?></a></p>
 </main>
 <?php if ( $ipscanner_credit ) : ?>
-<footer><a href="https://ipscanner.io" rel="noopener"><?php esc_html_e( 'Protected by IPScanner', 'ipscanner' ); ?></a></footer>
+<footer><a href="https://ipscanner.io" rel="noopener"><?php esc_html_e( 'Protected by IPScanner', 'ipscanner-bot-blocker' ); ?></a></footer>
 <?php endif; ?>
 </body>
 </html>

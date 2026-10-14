@@ -150,7 +150,7 @@ final class IPScanner_Settings {
 		$site           = isset( $input['site_id'] ) ? sanitize_text_field( $input['site_id'] ) : '';
 		$out['site_id'] = preg_match( '/^site_[A-Za-z0-9]{1,40}$/', $site ) ? $site : '';
 		if ( '' !== $site && '' === $out['site_id'] ) {
-			add_settings_error( self::OPTION, 'site_id', __( 'Site ID should look like site_ followed by letters and digits. It was not saved.', 'ipscanner' ) );
+			add_settings_error( self::OPTION, 'site_id', __( 'Site ID should look like site_ followed by letters and digits. It was not saved.', 'ipscanner-bot-blocker' ) );
 		}
 
 		$out['mode'] = isset( $input['mode'] ) && IPScanner_Policy::MODE_ENFORCE === $input['mode'] ? IPScanner_Policy::MODE_ENFORCE : IPScanner_Policy::MODE_MONITOR;
@@ -170,7 +170,7 @@ final class IPScanner_Settings {
 					$list,
 					sprintf(
 						/* translators: %s: list of invalid entries */
-						__( 'Skipped entries that are not IP addresses or CIDR ranges: %s', 'ipscanner' ),
+						__( 'Skipped entries that are not IP addresses or CIDR ranges: %s', 'ipscanner-bot-blocker' ),
 						implode( ', ', array_slice( $bad, 0, 10 ) )
 					)
 				);

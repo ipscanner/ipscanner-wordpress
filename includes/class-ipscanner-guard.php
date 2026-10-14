@@ -84,7 +84,7 @@ final class IPScanner_Guard {
 	 */
 	public function message() {
 		$custom = trim( (string) $this->settings->get( 'block_message' ) );
-		return '' !== $custom ? $custom : __( 'Your request was blocked. If you think this is a mistake, contact the site owner.', 'ipscanner' );
+		return '' !== $custom ? $custom : __( 'Your request was blocked. If you think this is a mistake, contact the site owner.', 'ipscanner-bot-blocker' );
 	}
 
 	/**

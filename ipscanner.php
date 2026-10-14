@@ -1,16 +1,16 @@
 <?php
 /**
- * Plugin Name:       IPScanner
+ * Plugin Name:       IPScanner – Block Bots, VPNs & Proxies
  * Plugin URI:        https://github.com/ipscanner/ipscanner-wordpress
  * Description:       Checks visitors with IPScanner and blocks bots, Tor, VPN and proxy traffic on your site, login, registration, comments and checkout.
- * Version:           0.1.2
+ * Version:           0.1.3
  * Requires at least: 6.0
  * Requires PHP:      7.4
  * Author:            IPScanner
  * Author URI:        https://ipscanner.io
  * License:           GPLv2 or later
  * License URI:       https://www.gnu.org/licenses/gpl-2.0.html
- * Text Domain:       ipscanner
+ * Text Domain:       ipscanner-bot-blocker
  * Domain Path:       /languages
  *
  * @package IPScanner
@@ -18,7 +18,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
-define( 'IPSCANNER_VERSION', '0.1.2' );
+define( 'IPSCANNER_VERSION', '0.1.3' );
 define( 'IPSCANNER_FILE', __FILE__ );
 define( 'IPSCANNER_DIR', plugin_dir_path( __FILE__ ) );
 

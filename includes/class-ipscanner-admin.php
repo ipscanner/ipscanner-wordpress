@@ -107,7 +107,7 @@ final class IPScanner_Admin {
 	 * @return string[]
 	 */
 	public function action_links( $links ) {
-		array_unshift( $links, '<a href="' . esc_url( $this->page_url() ) . '">' . esc_html__( 'Settings', 'ipscanner' ) . '</a>' );
+		array_unshift( $links, '<a href="' . esc_url( $this->page_url() ) . '">' . esc_html__( 'Settings', 'ipscanner-bot-blocker' ) . '</a>' );
 		return $links;
 	}
 
@@ -139,14 +139,14 @@ final class IPScanner_Admin {
 	 */
 	private function area_labels() {
 		return array(
-			'site'         => __( 'Whole site (front end)', 'ipscanner' ),
-			'login'        => __( 'Login', 'ipscanner' ),
-			'register'     => __( 'Registration', 'ipscanner' ),
-			'lostpassword' => __( 'Password reset', 'ipscanner' ),
-			'comments'     => __( 'Comments', 'ipscanner' ),
-			'woo_checkout' => __( 'WooCommerce checkout', 'ipscanner' ),
-			'woo_register' => __( 'WooCommerce account registration', 'ipscanner' ),
-			'forms'        => __( 'Contact Form 7 and WPForms', 'ipscanner' ),
+			'site'         => __( 'Whole site (front end)', 'ipscanner-bot-blocker' ),
+			'login'        => __( 'Login', 'ipscanner-bot-blocker' ),
+			'register'     => __( 'Registration', 'ipscanner-bot-blocker' ),
+			'lostpassword' => __( 'Password reset', 'ipscanner-bot-blocker' ),
+			'comments'     => __( 'Comments', 'ipscanner-bot-blocker' ),
+			'woo_checkout' => __( 'WooCommerce checkout', 'ipscanner-bot-blocker' ),
+			'woo_register' => __( 'WooCommerce account registration', 'ipscanner-bot-blocker' ),
+			'forms'        => __( 'Contact Form 7 and WPForms', 'ipscanner-bot-blocker' ),
 		);
 	}
 
@@ -157,15 +157,15 @@ final class IPScanner_Admin {
 	 */
 	private function class_labels() {
 		return array(
-			'human'                => __( 'Human', 'ipscanner' ),
-			'verified_bot'         => __( 'Verified crawler', 'ipscanner' ),
-			'ai_agent'             => __( 'AI agent', 'ipscanner' ),
-			'malicious_automation' => __( 'Malicious automation', 'ipscanner' ),
-			'tor'                  => __( 'Tor', 'ipscanner' ),
-			'vpn'                  => __( 'VPN', 'ipscanner' ),
-			'proxy'                => __( 'Proxy', 'ipscanner' ),
-			'hosting'              => __( 'Hosting or data center', 'ipscanner' ),
-			'relay'                => __( 'Privacy relay', 'ipscanner' ),
+			'human'                => __( 'Human', 'ipscanner-bot-blocker' ),
+			'verified_bot'         => __( 'Verified crawler', 'ipscanner-bot-blocker' ),
+			'ai_agent'             => __( 'AI agent', 'ipscanner-bot-blocker' ),
+			'malicious_automation' => __( 'Malicious automation', 'ipscanner-bot-blocker' ),
+			'tor'                  => __( 'Tor', 'ipscanner-bot-blocker' ),
+			'vpn'                  => __( 'VPN', 'ipscanner-bot-blocker' ),
+			'proxy'                => __( 'Proxy', 'ipscanner-bot-blocker' ),
+			'hosting'              => __( 'Hosting or data center', 'ipscanner-bot-blocker' ),
+			'relay'                => __( 'Privacy relay', 'ipscanner-bot-blocker' ),
 		);
 	}
 
@@ -190,11 +190,11 @@ final class IPScanner_Admin {
 	 */
 	private function decision_labels() {
 		return array(
-			'allow'       => __( 'Allowed', 'ipscanner' ),
-			'flag'        => __( 'Flagged', 'ipscanner' ),
-			'block'       => __( 'Blocked', 'ipscanner' ),
-			'would_flag'  => __( 'Would flag', 'ipscanner' ),
-			'would_block' => __( 'Would block', 'ipscanner' ),
+			'allow'       => __( 'Allowed', 'ipscanner-bot-blocker' ),
+			'flag'        => __( 'Flagged', 'ipscanner-bot-blocker' ),
+			'block'       => __( 'Blocked', 'ipscanner-bot-blocker' ),
+			'would_flag'  => __( 'Would flag', 'ipscanner-bot-blocker' ),
+			'would_block' => __( 'Would block', 'ipscanner-bot-blocker' ),
 		);
 	}
 
@@ -297,9 +297,9 @@ final class IPScanner_Admin {
 			<h1 class="ipscanner-title"><?php $this->mark( 28 ); ?> IPScanner</h1>
 			<hr class="wp-header-end">
 			<?php $this->render_test_result(); ?>
-			<nav class="nav-tab-wrapper" aria-label="<?php esc_attr_e( 'IPScanner', 'ipscanner' ); ?>">
-				<a href="<?php echo esc_url( $this->page_url() ); ?>" class="nav-tab<?php echo 'overview' === $tab ? ' nav-tab-active' : ''; ?>"<?php echo 'overview' === $tab ? ' aria-current="page"' : ''; ?>><?php esc_html_e( 'Overview', 'ipscanner' ); ?></a>
-				<a href="<?php echo esc_url( $this->page_url( array( 'tab' => 'settings' ) ) ); ?>" class="nav-tab<?php echo 'settings' === $tab ? ' nav-tab-active' : ''; ?>"<?php echo 'settings' === $tab ? ' aria-current="page"' : ''; ?>><?php esc_html_e( 'Settings', 'ipscanner' ); ?></a>
+			<nav class="nav-tab-wrapper" aria-label="<?php esc_attr_e( 'IPScanner', 'ipscanner-bot-blocker' ); ?>">
+				<a href="<?php echo esc_url( $this->page_url() ); ?>" class="nav-tab<?php echo 'overview' === $tab ? ' nav-tab-active' : ''; ?>"<?php echo 'overview' === $tab ? ' aria-current="page"' : ''; ?>><?php esc_html_e( 'Overview', 'ipscanner-bot-blocker' ); ?></a>
+				<a href="<?php echo esc_url( $this->page_url( array( 'tab' => 'settings' ) ) ); ?>" class="nav-tab<?php echo 'settings' === $tab ? ' nav-tab-active' : ''; ?>"<?php echo 'settings' === $tab ? ' aria-current="page"' : ''; ?>><?php esc_html_e( 'Settings', 'ipscanner-bot-blocker' ); ?></a>
 			</nav>
 			<?php
 			if ( 'settings' === $tab ) {
@@ -331,10 +331,10 @@ final class IPScanner_Admin {
 		$areas = (array) $this->settings->get( 'areas' );
 		$woo   = class_exists( 'WooCommerce' );
 		$quick = array(
-			'login'        => __( 'Login', 'ipscanner' ),
-			'register'     => __( 'Registration', 'ipscanner' ),
-			'comments'     => __( 'Comments', 'ipscanner' ),
-			'woo_checkout' => __( 'Checkout', 'ipscanner' ),
+			'login'        => __( 'Login', 'ipscanner-bot-blocker' ),
+			'register'     => __( 'Registration', 'ipscanner-bot-blocker' ),
+			'comments'     => __( 'Comments', 'ipscanner-bot-blocker' ),
+			'woo_checkout' => __( 'Checkout', 'ipscanner-bot-blocker' ),
 		);
 		if ( ! $woo ) {
 			unset( $quick['woo_checkout'] );
@@ -343,37 +343,37 @@ final class IPScanner_Admin {
 		<div class="ipscanner-welcome">
 			<div class="ipscanner-welcome-head">
 				<?php $this->mark( 40 ); ?>
-				<h2><?php esc_html_e( 'Protect logins, forms and checkout', 'ipscanner' ); ?></h2>
+				<h2><?php esc_html_e( 'Protect logins, forms and checkout', 'ipscanner-bot-blocker' ); ?></h2>
 				<?php if ( $step >= 3 ) : ?>
 					<form method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>" class="ipscanner-welcome-skip">
 						<input type="hidden" name="action" value="ipscanner_onboard_dismiss">
 						<?php wp_nonce_field( 'ipscanner_onboard_dismiss' ); ?>
-						<button type="submit" class="button-link"><?php esc_html_e( 'Skip', 'ipscanner' ); ?></button>
+						<button type="submit" class="button-link"><?php esc_html_e( 'Skip', 'ipscanner-bot-blocker' ); ?></button>
 					</form>
 				<?php endif; ?>
 			</div>
 			<ol class="ipscanner-steps">
 				<li class="ipscanner-step <?php echo esc_attr( $state( 1 ) ); ?>">
 					<span class="ipscanner-step-icon dashicons <?php echo esc_attr( 1 < $step ? 'dashicons-yes-alt' : 'dashicons-admin-network' ); ?>" aria-hidden="true"></span>
-					<h3><?php esc_html_e( 'Get a free API key', 'ipscanner' ); ?></h3>
+					<h3><?php esc_html_e( 'Get a free API key', 'ipscanner-bot-blocker' ); ?></h3>
 					<?php if ( 1 < $step ) : ?>
-						<p class="ipscanner-step-note"><?php esc_html_e( 'Done', 'ipscanner' ); ?></p>
+						<p class="ipscanner-step-note"><?php esc_html_e( 'Done', 'ipscanner-bot-blocker' ); ?></p>
 					<?php else : ?>
-						<p><a class="button button-primary" href="<?php echo esc_url( self::KEYS_URL ); ?>" target="_blank" rel="noopener"><?php esc_html_e( 'Get API key', 'ipscanner' ); ?><span class="screen-reader-text"> <?php esc_html_e( '(opens in a new tab)', 'ipscanner' ); ?></span></a></p>
+						<p><a class="button button-primary" href="<?php echo esc_url( self::KEYS_URL ); ?>" target="_blank" rel="noopener"><?php esc_html_e( 'Get API key', 'ipscanner-bot-blocker' ); ?><span class="screen-reader-text"> <?php esc_html_e( '(opens in a new tab)', 'ipscanner-bot-blocker' ); ?></span></a></p>
 					<?php endif; ?>
 				</li>
 				<li class="ipscanner-step <?php echo esc_attr( $state( 2 ) ); ?>">
 					<span class="ipscanner-step-icon dashicons <?php echo esc_attr( 2 < $step ? 'dashicons-yes-alt' : 'dashicons-admin-links' ); ?>" aria-hidden="true"></span>
-					<h3><label for="ipscanner-onboard-key"><?php esc_html_e( 'Paste it here', 'ipscanner' ); ?></label></h3>
+					<h3><label for="ipscanner-onboard-key"><?php esc_html_e( 'Paste it here', 'ipscanner-bot-blocker' ); ?></label></h3>
 					<?php if ( 2 < $step ) : ?>
 						<p class="ipscanner-step-note">
 							<?php
 							$plan = self::plan( $usage );
 							echo esc_html(
 								'' === $plan['plan']
-									? __( 'Connected', 'ipscanner' )
+									? __( 'Connected', 'ipscanner-bot-blocker' )
 									/* translators: %s: plan name */
-									: sprintf( __( 'Connected, %s plan', 'ipscanner' ), $plan['plan'] )
+									: sprintf( __( 'Connected, %s plan', 'ipscanner-bot-blocker' ), $plan['plan'] )
 							);
 							?>
 						</p>
@@ -382,7 +382,7 @@ final class IPScanner_Admin {
 							<input type="hidden" name="action" value="ipscanner_onboard_key">
 							<?php wp_nonce_field( 'ipscanner_onboard_key' ); ?>
 							<input type="password" id="ipscanner-onboard-key" name="api_key" class="regular-text" placeholder="pk_live_..." autocomplete="new-password" spellcheck="false" required>
-							<button type="submit" class="button <?php echo esc_attr( 2 === $step ? 'button-primary' : '' ); ?>"><?php esc_html_e( 'Save', 'ipscanner' ); ?></button>
+							<button type="submit" class="button <?php echo esc_attr( 2 === $step ? 'button-primary' : '' ); ?>"><?php esc_html_e( 'Save', 'ipscanner-bot-blocker' ); ?></button>
 						</form>
 						<?php if ( is_array( $usage ) && ! $ok ) : ?>
 							<p class="ipscanner-step-error"><?php echo esc_html( $this->failure_text( $usage ) ); ?></p>
@@ -391,16 +391,16 @@ final class IPScanner_Admin {
 				</li>
 				<li class="ipscanner-step <?php echo esc_attr( $state( 3 ) ); ?>">
 					<span class="ipscanner-step-icon dashicons dashicons-shield" aria-hidden="true"></span>
-					<h3><?php esc_html_e( 'Choose what to protect', 'ipscanner' ); ?></h3>
+					<h3><?php esc_html_e( 'Choose what to protect', 'ipscanner-bot-blocker' ); ?></h3>
 					<form method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>">
 						<input type="hidden" name="action" value="ipscanner_onboard_areas">
 						<?php wp_nonce_field( 'ipscanner_onboard_areas' ); ?>
 						<fieldset <?php disabled( '' === $key ); ?>>
-							<legend class="screen-reader-text"><?php esc_html_e( 'Choose what to protect', 'ipscanner' ); ?></legend>
+							<legend class="screen-reader-text"><?php esc_html_e( 'Choose what to protect', 'ipscanner-bot-blocker' ); ?></legend>
 							<?php foreach ( $quick as $area => $label ) : ?>
 								<label><input type="checkbox" name="areas[]" value="<?php echo esc_attr( $area ); ?>" <?php checked( in_array( $area, $areas, true ) ); ?>> <?php echo esc_html( $label ); ?></label>
 							<?php endforeach; ?>
-							<p><button type="submit" class="button <?php echo esc_attr( 3 === $step ? 'button-primary' : '' ); ?>"><?php esc_html_e( 'Save', 'ipscanner' ); ?></button></p>
+							<p><button type="submit" class="button <?php echo esc_attr( 3 === $step ? 'button-primary' : '' ); ?>"><?php esc_html_e( 'Save', 'ipscanner-bot-blocker' ); ?></button></p>
 						</fieldset>
 					</form>
 				</li>
@@ -423,47 +423,47 @@ final class IPScanner_Admin {
 			<?php $this->render_status( $usage ); ?>
 			<p class="ipscanner-status-mode">
 				<?php
-				echo esc_html( $enforce ? __( 'Enforce mode', 'ipscanner' ) : __( 'Monitor mode', 'ipscanner' ) );
+				echo esc_html( $enforce ? __( 'Enforce mode', 'ipscanner-bot-blocker' ) : __( 'Monitor mode', 'ipscanner-bot-blocker' ) );
 				if ( '' !== $site ) {
 					printf(
 						' <a href="%1$s" target="_blank" rel="noopener">%2$s</a>',
 						esc_url( self::DASHBOARD_URL . '/' . rawurlencode( $site ) ),
-						esc_html__( 'Policy from dashboard', 'ipscanner' )
+						esc_html__( 'Policy from dashboard', 'ipscanner-bot-blocker' )
 					);
 				} else {
-					printf( ' <a href="%1$s">%2$s</a>', esc_url( $this->page_url( array( 'tab' => 'settings' ) ) ), esc_html__( 'Change', 'ipscanner' ) );
+					printf( ' <a href="%1$s">%2$s</a>', esc_url( $this->page_url( array( 'tab' => 'settings' ) ) ), esc_html__( 'Change', 'ipscanner-bot-blocker' ) );
 				}
 				?>
 			</p>
 			<?php if ( '' === $site ) : ?>
 				<p class="ipscanner-muted">
-					<a href="<?php echo esc_url( self::NEW_SITE_URL ); ?>" target="_blank" rel="noopener"><?php esc_html_e( 'Add this site to the IPScanner dashboard for traffic charts', 'ipscanner' ); ?></a>
+					<a href="<?php echo esc_url( self::NEW_SITE_URL ); ?>" target="_blank" rel="noopener"><?php esc_html_e( 'Add this site to the IPScanner dashboard for traffic charts', 'ipscanner-bot-blocker' ); ?></a>
 				</p>
 			<?php endif; ?>
 		</div>
 
-		<h2><?php esc_html_e( 'Last 24 hours', 'ipscanner' ); ?></h2>
+		<h2><?php esc_html_e( 'Last 24 hours', 'ipscanner-bot-blocker' ); ?></h2>
 		<div class="ipscanner-numbers">
 			<div class="ipscanner-number">
 				<span class="ipscanner-number-value"><?php echo esc_html( number_format_i18n( $totals['checked'] ) ); ?></span>
-				<span class="ipscanner-number-label"><?php esc_html_e( 'Checked', 'ipscanner' ); ?></span>
+				<span class="ipscanner-number-label"><?php esc_html_e( 'Checked', 'ipscanner-bot-blocker' ); ?></span>
 			</div>
 			<div class="ipscanner-number">
 				<span class="ipscanner-number-value"><?php echo esc_html( number_format_i18n( $enforce ? $totals['blocked'] : $totals['would'] ) ); ?></span>
-				<span class="ipscanner-number-label"><?php echo esc_html( $enforce ? __( 'Blocked', 'ipscanner' ) : __( 'Would block', 'ipscanner' ) ); ?></span>
+				<span class="ipscanner-number-label"><?php echo esc_html( $enforce ? __( 'Blocked', 'ipscanner-bot-blocker' ) : __( 'Would block', 'ipscanner-bot-blocker' ) ); ?></span>
 			</div>
 			<div class="ipscanner-number">
 				<span class="ipscanner-number-value is-text"><?php echo esc_html( $this->class_label( $enforce ? $totals['top'] : $totals['top_would'] ) ); ?></span>
-				<span class="ipscanner-number-label"><?php esc_html_e( 'Top reason', 'ipscanner' ); ?></span>
+				<span class="ipscanner-number-label"><?php esc_html_e( 'Top reason', 'ipscanner-bot-blocker' ); ?></span>
 			</div>
 		</div>
 
-		<h2><?php esc_html_e( 'Recent decisions', 'ipscanner' ); ?></h2>
+		<h2><?php esc_html_e( 'Recent decisions', 'ipscanner-bot-blocker' ); ?></h2>
 		<?php $this->render_log( array_slice( IPScanner_Log::all(), 0, self::LOG_ROWS ) ); ?>
 		<form method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>">
 			<input type="hidden" name="action" value="ipscanner_clear_log">
 			<?php wp_nonce_field( 'ipscanner_clear_log' ); ?>
-			<p><?php submit_button( __( 'Clear', 'ipscanner' ), 'secondary', 'ipscanner_clear', false ); ?></p>
+			<p><?php submit_button( __( 'Clear', 'ipscanner-bot-blocker' ), 'secondary', 'ipscanner_clear', false ); ?></p>
 		</form>
 		<?php
 	}
@@ -488,7 +488,7 @@ final class IPScanner_Admin {
 			);
 		} else {
 			$state = 'is-ok';
-			$text  = __( 'Connected', 'ipscanner' );
+			$text  = __( 'Connected', 'ipscanner-bot-blocker' );
 		}
 		$plan = is_array( $usage ) && $usage['ok'] ? self::plan( $usage ) : array(
 			'plan'    => '',
@@ -500,17 +500,17 @@ final class IPScanner_Admin {
 			<strong><?php echo esc_html( $text ); ?></strong>
 			<?php if ( '' !== $plan['plan'] ) : ?>
 				<?php /* translators: %s: plan name */ ?>
-				<span><?php echo esc_html( sprintf( __( '%s plan', 'ipscanner' ), $plan['plan'] ) ); ?></span>
+				<span><?php echo esc_html( sprintf( __( '%s plan', 'ipscanner-bot-blocker' ), $plan['plan'] ) ); ?></span>
 			<?php endif; ?>
 			<?php if ( null !== $plan['percent'] ) : ?>
 				<span class="ipscanner-usage">
 					<span class="ipscanner-bar" aria-hidden="true"><span style="width:<?php echo esc_attr( max( 1, $plan['percent'] ) ); ?>%"></span></span>
 					<?php /* translators: %d: percentage of the monthly requests used */ ?>
-					<?php echo esc_html( sprintf( __( '%d%% used this month', 'ipscanner' ), $plan['percent'] ) ); ?>
+					<?php echo esc_html( sprintf( __( '%d%% used this month', 'ipscanner-bot-blocker' ), $plan['percent'] ) ); ?>
 				</span>
 			<?php endif; ?>
 			<?php if ( 'is-error' === $state ) : ?>
-				<a href="<?php echo esc_url( $this->page_url( array( 'tab' => 'settings' ) ) ); ?>"><?php esc_html_e( 'Settings', 'ipscanner' ); ?></a>
+				<a href="<?php echo esc_url( $this->page_url( array( 'tab' => 'settings' ) ) ); ?>"><?php esc_html_e( 'Settings', 'ipscanner-bot-blocker' ); ?></a>
 			<?php endif; ?>
 		</p>
 		<?php
@@ -530,48 +530,48 @@ final class IPScanner_Admin {
 		<form method="post" action="options.php" class="ipscanner-settings">
 			<?php settings_fields( self::PAGE ); ?>
 
-			<h2><?php esc_html_e( 'Connection', 'ipscanner' ); ?></h2>
+			<h2><?php esc_html_e( 'Connection', 'ipscanner-bot-blocker' ); ?></h2>
 			<table class="form-table" role="presentation">
 				<tr>
-					<th scope="row"><label for="ipscanner-api-key"><?php esc_html_e( 'API key', 'ipscanner' ); ?></label></th>
+					<th scope="row"><label for="ipscanner-api-key"><?php esc_html_e( 'API key', 'ipscanner-bot-blocker' ); ?></label></th>
 					<td>
 						<?php if ( $by_const ) : ?>
-							<p><?php esc_html_e( 'Set by the IPSCANNER_API_KEY constant.', 'ipscanner' ); ?></p>
+							<p><?php esc_html_e( 'Set by the IPSCANNER_API_KEY constant.', 'ipscanner-bot-blocker' ); ?></p>
 						<?php else : ?>
 							<input type="password" id="ipscanner-api-key" name="<?php echo esc_attr( $name ); ?>[api_key]" value="" class="regular-text" autocomplete="new-password" spellcheck="false"
-								placeholder="<?php echo esc_attr( '' === $s['api_key'] ? 'pk_live_...' : sprintf( /* translators: %s: last 4 characters of the key */ __( 'Saved, ends in %s', 'ipscanner' ), substr( $s['api_key'], -4 ) ) ); ?>">
+								placeholder="<?php echo esc_attr( '' === $s['api_key'] ? 'pk_live_...' : sprintf( /* translators: %s: last 4 characters of the key */ __( 'Saved, ends in %s', 'ipscanner-bot-blocker' ), substr( $s['api_key'], -4 ) ) ); ?>">
 							<?php if ( '' !== $s['api_key'] ) : ?>
-								<label><input type="checkbox" name="<?php echo esc_attr( $name ); ?>[api_key_clear]" value="1"> <?php esc_html_e( 'Remove', 'ipscanner' ); ?></label>
+								<label><input type="checkbox" name="<?php echo esc_attr( $name ); ?>[api_key_clear]" value="1"> <?php esc_html_e( 'Remove', 'ipscanner-bot-blocker' ); ?></label>
 							<?php endif; ?>
 							<p class="description">
 								<?php
 								if ( '' === $key ) {
 									printf(
 										/* translators: %s: link to the API keys page */
-										esc_html__( 'Get a key at %s.', 'ipscanner' ),
+										esc_html__( 'Get a key at %s.', 'ipscanner-bot-blocker' ),
 										'<a href="' . esc_url( self::KEYS_URL ) . '" target="_blank" rel="noopener">ipscanner.io</a>'
 									);
 									echo ' ';
 								}
-								esc_html_e( 'Each new visitor check uses 2 requests. Results are cached for 10 minutes per visitor.', 'ipscanner' );
+								esc_html_e( 'Each new visitor check uses 2 requests. Results are cached for 10 minutes per visitor.', 'ipscanner-bot-blocker' );
 								?>
 							</p>
 						<?php endif; ?>
 						<?php if ( '' !== $key ) : ?>
-							<p><button type="submit" form="ipscanner-test" class="button"><?php esc_html_e( 'Test connection', 'ipscanner' ); ?></button></p>
+							<p><button type="submit" form="ipscanner-test" class="button"><?php esc_html_e( 'Test connection', 'ipscanner-bot-blocker' ); ?></button></p>
 						<?php endif; ?>
 					</td>
 				</tr>
 				<tr>
-					<th scope="row"><label for="ipscanner-site-id"><?php esc_html_e( 'Site ID', 'ipscanner' ); ?></label></th>
+					<th scope="row"><label for="ipscanner-site-id"><?php esc_html_e( 'Site ID', 'ipscanner-bot-blocker' ); ?></label></th>
 					<td>
 						<input type="text" id="ipscanner-site-id" name="<?php echo esc_attr( $name ); ?>[site_id]" value="<?php echo esc_attr( $s['site_id'] ); ?>" class="regular-text" placeholder="site_..." spellcheck="false">
 						<p class="description">
 							<?php
 							printf(
 								/* translators: %s: link to the IPScanner dashboard */
-								esc_html__( 'Optional. With a Site ID, mode and per class policy come from the %s and the mode and block settings below are ignored.', 'ipscanner' ),
-								'<a href="' . esc_url( self::DASHBOARD_URL ) . '" target="_blank" rel="noopener">' . esc_html__( 'IPScanner dashboard', 'ipscanner' ) . '</a>'
+								esc_html__( 'Optional. With a Site ID, mode and per class policy come from the %s and the mode and block settings below are ignored.', 'ipscanner-bot-blocker' ),
+								'<a href="' . esc_url( self::DASHBOARD_URL ) . '" target="_blank" rel="noopener">' . esc_html__( 'IPScanner dashboard', 'ipscanner-bot-blocker' ) . '</a>'
 							);
 							?>
 						</p>
@@ -579,34 +579,34 @@ final class IPScanner_Admin {
 				</tr>
 			</table>
 
-			<h2><?php esc_html_e( 'Protection', 'ipscanner' ); ?></h2>
+			<h2><?php esc_html_e( 'Protection', 'ipscanner-bot-blocker' ); ?></h2>
 			<table class="form-table" role="presentation">
 				<tr>
-					<th scope="row"><?php esc_html_e( 'Mode', 'ipscanner' ); ?></th>
+					<th scope="row"><?php esc_html_e( 'Mode', 'ipscanner-bot-blocker' ); ?></th>
 					<td>
 						<fieldset>
-							<label><input type="radio" name="<?php echo esc_attr( $name ); ?>[mode]" value="monitor" <?php checked( $s['mode'], 'monitor' ); ?>> <?php esc_html_e( 'Monitor: record decisions, block nothing', 'ipscanner' ); ?></label><br>
-							<label><input type="radio" name="<?php echo esc_attr( $name ); ?>[mode]" value="enforce" <?php checked( $s['mode'], 'enforce' ); ?>> <?php esc_html_e( 'Enforce: block the classes selected below', 'ipscanner' ); ?></label>
+							<label><input type="radio" name="<?php echo esc_attr( $name ); ?>[mode]" value="monitor" <?php checked( $s['mode'], 'monitor' ); ?>> <?php esc_html_e( 'Monitor: record decisions, block nothing', 'ipscanner-bot-blocker' ); ?></label><br>
+							<label><input type="radio" name="<?php echo esc_attr( $name ); ?>[mode]" value="enforce" <?php checked( $s['mode'], 'enforce' ); ?>> <?php esc_html_e( 'Enforce: block the classes selected below', 'ipscanner-bot-blocker' ); ?></label>
 						</fieldset>
 					</td>
 				</tr>
 				<tr>
-					<th scope="row"><?php esc_html_e( 'Protected areas', 'ipscanner' ); ?></th>
+					<th scope="row"><?php esc_html_e( 'Protected areas', 'ipscanner-bot-blocker' ); ?></th>
 					<td>
 						<fieldset>
 							<?php foreach ( $this->area_labels() as $area => $label ) : ?>
 								<label><input type="checkbox" name="<?php echo esc_attr( $name ); ?>[areas][]" value="<?php echo esc_attr( $area ); ?>" <?php checked( in_array( $area, (array) $s['areas'], true ) ); ?>> <?php echo esc_html( $label ); ?></label>
 								<?php if ( 0 === strpos( $area, 'woo_' ) && ! $woo ) : ?>
-									<span class="description"><?php esc_html_e( '(WooCommerce is not active)', 'ipscanner' ); ?></span>
+									<span class="description"><?php esc_html_e( '(WooCommerce is not active)', 'ipscanner-bot-blocker' ); ?></span>
 								<?php endif; ?>
 								<br>
 							<?php endforeach; ?>
 						</fieldset>
-						<p class="description"><?php esc_html_e( 'Forms are checked when submitted. The whole site option checks every page view.', 'ipscanner' ); ?></p>
+						<p class="description"><?php esc_html_e( 'Forms are checked when submitted. The whole site option checks every page view.', 'ipscanner-bot-blocker' ); ?></p>
 					</td>
 				</tr>
 				<tr>
-					<th scope="row"><?php esc_html_e( 'Block', 'ipscanner' ); ?></th>
+					<th scope="row"><?php esc_html_e( 'Block', 'ipscanner-bot-blocker' ); ?></th>
 					<td>
 						<fieldset>
 							<?php
@@ -616,60 +616,60 @@ final class IPScanner_Admin {
 								<label><input type="checkbox" name="<?php echo esc_attr( $name ); ?>[block_classes][]" value="<?php echo esc_attr( $class ); ?>" <?php checked( in_array( $class, (array) $s['block_classes'], true ) ); ?>> <?php echo esc_html( $labels[ $class ] ); ?></label><br>
 							<?php endforeach; ?>
 						</fieldset>
-						<p class="description"><?php esc_html_e( 'Verified search engine and AI crawlers always pass.', 'ipscanner' ); ?></p>
+						<p class="description"><?php esc_html_e( 'Verified search engine and AI crawlers always pass.', 'ipscanner-bot-blocker' ); ?></p>
 					</td>
 				</tr>
 			</table>
 
-			<h2><?php esc_html_e( 'Visitors and IPs', 'ipscanner' ); ?></h2>
+			<h2><?php esc_html_e( 'Visitors and IPs', 'ipscanner-bot-blocker' ); ?></h2>
 			<table class="form-table" role="presentation">
 				<tr>
-					<th scope="row"><label for="ipscanner-allowlist"><?php esc_html_e( 'Always allow', 'ipscanner' ); ?></label></th>
+					<th scope="row"><label for="ipscanner-allowlist"><?php esc_html_e( 'Always allow', 'ipscanner-bot-blocker' ); ?></label></th>
 					<td>
 						<textarea id="ipscanner-allowlist" name="<?php echo esc_attr( $name ); ?>[allowlist]" rows="4" class="large-text code" placeholder="203.0.113.7&#10;2001:db8::/32"><?php echo esc_textarea( $s['allowlist'] ); ?></textarea>
-						<p class="description"><?php esc_html_e( 'IP addresses or CIDR ranges, one per line. Not checked and never blocked.', 'ipscanner' ); ?></p>
-						<label><input type="checkbox" name="<?php echo esc_attr( $name ); ?>[allow_admins]" value="1" <?php checked( $s['allow_admins'] ); ?>> <?php esc_html_e( 'Always allow administrators', 'ipscanner' ); ?></label>
+						<p class="description"><?php esc_html_e( 'IP addresses or CIDR ranges, one per line. Not checked and never blocked.', 'ipscanner-bot-blocker' ); ?></p>
+						<label><input type="checkbox" name="<?php echo esc_attr( $name ); ?>[allow_admins]" value="1" <?php checked( $s['allow_admins'] ); ?>> <?php esc_html_e( 'Always allow administrators', 'ipscanner-bot-blocker' ); ?></label>
 					</td>
 				</tr>
 				<tr>
-					<th scope="row"><label for="ipscanner-ip-source"><?php esc_html_e( 'Visitor IP', 'ipscanner' ); ?></label></th>
+					<th scope="row"><label for="ipscanner-ip-source"><?php esc_html_e( 'Visitor IP', 'ipscanner-bot-blocker' ); ?></label></th>
 					<td>
 						<select id="ipscanner-ip-source" name="<?php echo esc_attr( $name ); ?>[ip_source]">
-							<option value="remote_addr" <?php selected( $s['ip_source'], 'remote_addr' ); ?>><?php esc_html_e( 'Direct connection (REMOTE_ADDR)', 'ipscanner' ); ?></option>
-							<option value="cloudflare" <?php selected( $s['ip_source'], 'cloudflare' ); ?>><?php esc_html_e( 'Cloudflare (CF-Connecting-IP)', 'ipscanner' ); ?></option>
-							<option value="x_forwarded_for" <?php selected( $s['ip_source'], 'x_forwarded_for' ); ?>><?php esc_html_e( 'Proxy or load balancer (X-Forwarded-For)', 'ipscanner' ); ?></option>
+							<option value="remote_addr" <?php selected( $s['ip_source'], 'remote_addr' ); ?>><?php esc_html_e( 'Direct connection (REMOTE_ADDR)', 'ipscanner-bot-blocker' ); ?></option>
+							<option value="cloudflare" <?php selected( $s['ip_source'], 'cloudflare' ); ?>><?php esc_html_e( 'Cloudflare (CF-Connecting-IP)', 'ipscanner-bot-blocker' ); ?></option>
+							<option value="x_forwarded_for" <?php selected( $s['ip_source'], 'x_forwarded_for' ); ?>><?php esc_html_e( 'Proxy or load balancer (X-Forwarded-For)', 'ipscanner-bot-blocker' ); ?></option>
 						</select>
 						<p class="description">
 							<?php
 							/* translators: %s: visitor IP address */
-							printf( esc_html__( 'Your IP with this setting: %s', 'ipscanner' ), '<code>' . esc_html( '' === $ip ? '-' : $ip ) . '</code>' );
+							printf( esc_html__( 'Your IP with this setting: %s', 'ipscanner-bot-blocker' ), '<code>' . esc_html( '' === $ip ? '-' : $ip ) . '</code>' );
 							?>
 						</p>
-						<p><label for="ipscanner-trusted"><?php esc_html_e( 'Trusted proxies', 'ipscanner' ); ?></label></p>
+						<p><label for="ipscanner-trusted"><?php esc_html_e( 'Trusted proxies', 'ipscanner-bot-blocker' ); ?></label></p>
 						<textarea id="ipscanner-trusted" name="<?php echo esc_attr( $name ); ?>[trusted_proxies]" rows="3" class="large-text code" placeholder="10.0.0.0/8"><?php echo esc_textarea( $s['trusted_proxies'] ); ?></textarea>
-						<p class="description"><?php esc_html_e( 'Proxy headers are read only from these addresses. Cloudflare ranges are built in.', 'ipscanner' ); ?></p>
+						<p class="description"><?php esc_html_e( 'Proxy headers are read only from these addresses. Cloudflare ranges are built in.', 'ipscanner-bot-blocker' ); ?></p>
 					</td>
 				</tr>
 			</table>
 
-			<h2><?php esc_html_e( 'Block page', 'ipscanner' ); ?></h2>
+			<h2><?php esc_html_e( 'Block page', 'ipscanner-bot-blocker' ); ?></h2>
 			<table class="form-table" role="presentation">
 				<tr>
-					<th scope="row"><label for="ipscanner-message"><?php esc_html_e( 'Block message', 'ipscanner' ); ?></label></th>
+					<th scope="row"><label for="ipscanner-message"><?php esc_html_e( 'Block message', 'ipscanner-bot-blocker' ); ?></label></th>
 					<td>
-						<textarea id="ipscanner-message" name="<?php echo esc_attr( $name ); ?>[block_message]" rows="3" class="large-text" placeholder="<?php esc_attr_e( 'Your request was blocked. If you think this is a mistake, contact the site owner.', 'ipscanner' ); ?>"><?php echo esc_textarea( $s['block_message'] ); ?></textarea>
-						<label><input type="checkbox" name="<?php echo esc_attr( $name ); ?>[show_credit]" value="1" <?php checked( $s['show_credit'] ); ?>> <?php esc_html_e( 'Show "Protected by IPScanner" on the block page', 'ipscanner' ); ?></label>
+						<textarea id="ipscanner-message" name="<?php echo esc_attr( $name ); ?>[block_message]" rows="3" class="large-text" placeholder="<?php esc_attr_e( 'Your request was blocked. If you think this is a mistake, contact the site owner.', 'ipscanner-bot-blocker' ); ?>"><?php echo esc_textarea( $s['block_message'] ); ?></textarea>
+						<label><input type="checkbox" name="<?php echo esc_attr( $name ); ?>[show_credit]" value="1" <?php checked( $s['show_credit'] ); ?>> <?php esc_html_e( 'Show "Protected by IPScanner" on the block page', 'ipscanner-bot-blocker' ); ?></label>
 					</td>
 				</tr>
 			</table>
 
-			<h2><?php esc_html_e( 'Advanced', 'ipscanner' ); ?></h2>
+			<h2><?php esc_html_e( 'Advanced', 'ipscanner-bot-blocker' ); ?></h2>
 			<table class="form-table" role="presentation">
 				<tr>
-					<th scope="row"><label for="ipscanner-timeout"><?php esc_html_e( 'Timeout', 'ipscanner' ); ?></label></th>
+					<th scope="row"><label for="ipscanner-timeout"><?php esc_html_e( 'Timeout', 'ipscanner-bot-blocker' ); ?></label></th>
 					<td>
-						<input type="number" id="ipscanner-timeout" name="<?php echo esc_attr( $name ); ?>[timeout]" value="<?php echo esc_attr( $s['timeout'] ); ?>" min="0.5" max="5" step="0.1" class="small-text"> <?php esc_html_e( 'seconds', 'ipscanner' ); ?>
-						<p class="description"><?php esc_html_e( 'If IPScanner does not answer in time, the visitor is allowed.', 'ipscanner' ); ?></p>
+						<input type="number" id="ipscanner-timeout" name="<?php echo esc_attr( $name ); ?>[timeout]" value="<?php echo esc_attr( $s['timeout'] ); ?>" min="0.5" max="5" step="0.1" class="small-text"> <?php esc_html_e( 'seconds', 'ipscanner-bot-blocker' ); ?>
+						<p class="description"><?php esc_html_e( 'If IPScanner does not answer in time, the visitor is allowed.', 'ipscanner-bot-blocker' ); ?></p>
 					</td>
 				</tr>
 			</table>
@@ -690,26 +690,26 @@ final class IPScanner_Admin {
 	 */
 	private function render_log( array $log ) {
 		if ( ! $log ) {
-			echo '<p class="ipscanner-muted">' . esc_html__( 'No decisions yet.', 'ipscanner' ) . '</p>';
+			echo '<p class="ipscanner-muted">' . esc_html__( 'No decisions yet.', 'ipscanner-bot-blocker' ) . '</p>';
 			return;
 		}
 		$areas     = $this->area_labels();
 		$decisions = $this->decision_labels();
 		$statuses  = array(
-			'timeout'   => __( 'API timeout, allowed', 'ipscanner' ),
-			'error'     => __( 'API error, allowed', 'ipscanner' ),
-			'allowlist' => __( 'Allowlist', 'ipscanner' ),
+			'timeout'   => __( 'API timeout, allowed', 'ipscanner-bot-blocker' ),
+			'error'     => __( 'API error, allowed', 'ipscanner-bot-blocker' ),
+			'allowlist' => __( 'Allowlist', 'ipscanner-bot-blocker' ),
 		);
 		?>
 		<div class="ipscanner-table-wrap">
 			<table class="widefat striped ipscanner-log">
 				<thead>
 					<tr>
-						<th scope="col"><?php esc_html_e( 'Time', 'ipscanner' ); ?></th>
-						<th scope="col"><?php esc_html_e( 'IP', 'ipscanner' ); ?></th>
-						<th scope="col"><?php esc_html_e( 'Class', 'ipscanner' ); ?></th>
-						<th scope="col"><?php esc_html_e( 'Action', 'ipscanner' ); ?></th>
-						<th scope="col" class="column-where"><?php esc_html_e( 'Where', 'ipscanner' ); ?></th>
+						<th scope="col"><?php esc_html_e( 'Time', 'ipscanner-bot-blocker' ); ?></th>
+						<th scope="col"><?php esc_html_e( 'IP', 'ipscanner-bot-blocker' ); ?></th>
+						<th scope="col"><?php esc_html_e( 'Class', 'ipscanner-bot-blocker' ); ?></th>
+						<th scope="col"><?php esc_html_e( 'Action', 'ipscanner-bot-blocker' ); ?></th>
+						<th scope="col" class="column-where"><?php esc_html_e( 'Where', 'ipscanner-bot-blocker' ); ?></th>
 					</tr>
 				</thead>
 				<tbody>
@@ -773,7 +773,7 @@ final class IPScanner_Admin {
 	 */
 	private function require_cap() {
 		if ( ! current_user_can( 'manage_options' ) ) {
-			wp_die( esc_html__( 'You are not allowed to do this.', 'ipscanner' ), 403 );
+			wp_die( esc_html__( 'You are not allowed to do this.', 'ipscanner-bot-blocker' ), 403 );
 		}
 	}
 
@@ -792,11 +792,11 @@ final class IPScanner_Admin {
 			$used = isset( $d['used'] ) ? (int) $d['used'] : 0;
 			if ( ! empty( $d['unlimited'] ) ) {
 				/* translators: 1: plan name, 2: requests used */
-				$text = sprintf( __( 'Connected. Plan: %1$s. Used this month: %2$s requests.', 'ipscanner' ), $plan, number_format_i18n( $used ) );
+				$text = sprintf( __( 'Connected. Plan: %1$s. Used this month: %2$s requests.', 'ipscanner-bot-blocker' ), $plan, number_format_i18n( $used ) );
 			} else {
 				$text = sprintf(
 					/* translators: 1: plan name, 2: requests used, 3: monthly limit, 4: reset date */
-					__( 'Connected. Plan: %1$s. Used %2$s of %3$s requests this month, resets %4$s.', 'ipscanner' ),
+					__( 'Connected. Plan: %1$s. Used %2$s of %3$s requests this month, resets %4$s.', 'ipscanner-bot-blocker' ),
 					$plan,
 					number_format_i18n( $used ),
 					number_format_i18n( isset( $d['limit'] ) ? (int) $d['limit'] : 0 ),
@@ -824,18 +824,18 @@ final class IPScanner_Admin {
 					'ok'   => true,
 					'text' => sprintf(
 						/* translators: 1: site ID, 2: mode, 3: policy version, 4: blocked classes */
-						__( 'Site %1$s: %2$s mode, policy version %3$d. Blocked classes: %4$s.', 'ipscanner' ),
+						__( 'Site %1$s: %2$s mode, policy version %3$d. Blocked classes: %4$s.', 'ipscanner-bot-blocker' ),
 						$site,
 						$policy['mode'],
 						$policy['version'],
-						$blocks ? implode( ', ', $blocks ) : __( 'none', 'ipscanner' )
+						$blocks ? implode( ', ', $blocks ) : __( 'none', 'ipscanner-bot-blocker' )
 					),
 				);
 			} elseif ( 404 === $res['code'] ) {
 				$lines[] = array(
 					'ok'   => false,
 					/* translators: %s: site ID */
-					'text' => sprintf( __( 'Site %s was not found on this account.', 'ipscanner' ), $site ),
+					'text' => sprintf( __( 'Site %s was not found on this account.', 'ipscanner-bot-blocker' ), $site ),
 				);
 			} else {
 				$lines[] = array(
@@ -892,8 +892,8 @@ final class IPScanner_Admin {
 				array(
 					'ok'   => true,
 					'text' => IPScanner_Policy::MODE_ENFORCE === $this->mode()
-						? __( 'Saved. Enforce mode is on.', 'ipscanner' )
-						: __( 'Saved. Monitor mode is on: decisions are recorded, nothing is blocked.', 'ipscanner' ),
+						? __( 'Saved. Enforce mode is on.', 'ipscanner-bot-blocker' )
+						: __( 'Saved. Monitor mode is on: decisions are recorded, nothing is blocked.', 'ipscanner-bot-blocker' ),
 				),
 			)
 		);
@@ -920,17 +920,17 @@ final class IPScanner_Admin {
 	 */
 	private function failure_text( array $res ) {
 		if ( 401 === $res['code'] ) {
-			return __( 'The API key was rejected.', 'ipscanner' );
+			return __( 'The API key was rejected.', 'ipscanner-bot-blocker' );
 		}
 		if ( 429 === $res['code'] ) {
-			return __( 'The monthly allowance is used up. Visitors are allowed until it resets.', 'ipscanner' );
+			return __( 'The monthly allowance is used up. Visitors are allowed until it resets.', 'ipscanner-bot-blocker' );
 		}
 		if ( 0 === $res['code'] ) {
 			/* translators: %s: error message */
-			return sprintf( __( 'Could not reach IPScanner: %s', 'ipscanner' ), $res['message'] );
+			return sprintf( __( 'Could not reach IPScanner: %s', 'ipscanner-bot-blocker' ), $res['message'] );
 		}
 		/* translators: 1: HTTP status, 2: error message */
-		return trim( sprintf( __( 'IPScanner answered %1$d. %2$s', 'ipscanner' ), $res['code'], $res['message'] ) );
+		return trim( sprintf( __( 'IPScanner answered %1$d. %2$s', 'ipscanner-bot-blocker' ), $res['code'], $res['message'] ) );
 	}
 
 	/**
@@ -961,9 +961,9 @@ final class IPScanner_Admin {
 		if ( '' === $this->settings->api_key() ) {
 			printf(
 				'<p>%1$s <a href="%2$s">%3$s</a></p>',
-				esc_html__( 'Not connected.', 'ipscanner' ),
+				esc_html__( 'Not connected.', 'ipscanner-bot-blocker' ),
 				esc_url( $this->page_url() ),
-				esc_html__( 'Set up', 'ipscanner' )
+				esc_html__( 'Set up', 'ipscanner-bot-blocker' )
 			);
 			return;
 		}
@@ -972,22 +972,22 @@ final class IPScanner_Admin {
 		?>
 		<div class="ipscanner-widget">
 			<?php $this->render_status( $this->usage( false ) ); ?>
-			<p class="ipscanner-status-mode"><?php echo esc_html( $enforce ? __( 'Enforce mode', 'ipscanner' ) : __( 'Monitor mode', 'ipscanner' ) ); ?></p>
+			<p class="ipscanner-status-mode"><?php echo esc_html( $enforce ? __( 'Enforce mode', 'ipscanner-bot-blocker' ) : __( 'Monitor mode', 'ipscanner-bot-blocker' ) ); ?></p>
 			<div class="ipscanner-numbers">
 				<div class="ipscanner-number">
 					<span class="ipscanner-number-value"><?php echo esc_html( number_format_i18n( $totals['checked'] ) ); ?></span>
-					<span class="ipscanner-number-label"><?php esc_html_e( 'Checked, 24h', 'ipscanner' ); ?></span>
+					<span class="ipscanner-number-label"><?php esc_html_e( 'Checked, 24h', 'ipscanner-bot-blocker' ); ?></span>
 				</div>
 				<div class="ipscanner-number">
 					<span class="ipscanner-number-value"><?php echo esc_html( number_format_i18n( $enforce ? $totals['blocked'] : $totals['would'] ) ); ?></span>
-					<span class="ipscanner-number-label"><?php echo esc_html( $enforce ? __( 'Blocked', 'ipscanner' ) : __( 'Would block', 'ipscanner' ) ); ?></span>
+					<span class="ipscanner-number-label"><?php echo esc_html( $enforce ? __( 'Blocked', 'ipscanner-bot-blocker' ) : __( 'Would block', 'ipscanner-bot-blocker' ) ); ?></span>
 				</div>
 				<div class="ipscanner-number">
 					<span class="ipscanner-number-value is-text"><?php echo esc_html( $this->class_label( $enforce ? $totals['top'] : $totals['top_would'] ) ); ?></span>
-					<span class="ipscanner-number-label"><?php esc_html_e( 'Top reason', 'ipscanner' ); ?></span>
+					<span class="ipscanner-number-label"><?php esc_html_e( 'Top reason', 'ipscanner-bot-blocker' ); ?></span>
 				</div>
 			</div>
-			<p><a href="<?php echo esc_url( $this->page_url() ); ?>"><?php esc_html_e( 'Overview', 'ipscanner' ); ?></a></p>
+			<p><a href="<?php echo esc_url( $this->page_url() ); ?>"><?php esc_html_e( 'Overview', 'ipscanner-bot-blocker' ); ?></a></p>
 		</div>
 		<?php
 	}
@@ -1008,9 +1008,9 @@ final class IPScanner_Admin {
 			if ( 'plugins' === $screen->id ) {
 				printf(
 					'<div class="notice notice-warning"><p>%1$s <a href="%2$s">%3$s</a></p></div>',
-					esc_html__( 'IPScanner is not checking visitors yet.', 'ipscanner' ),
+					esc_html__( 'IPScanner is not checking visitors yet.', 'ipscanner-bot-blocker' ),
 					esc_url( $this->page_url() ),
-					esc_html__( 'Add your API key', 'ipscanner' )
+					esc_html__( 'Add your API key', 'ipscanner-bot-blocker' )
 				);
 			}
 			return;
@@ -1025,10 +1025,10 @@ final class IPScanner_Admin {
 		);
 		printf(
 			'<div class="notice notice-error"><p>%1$s %2$s <a href="%3$s">%4$s</a></p></div>',
-			esc_html__( 'IPScanner:', 'ipscanner' ),
+			esc_html__( 'IPScanner:', 'ipscanner-bot-blocker' ),
 			esc_html( $this->failure_text( $res ) ),
 			esc_url( $this->page_url( array( 'tab' => 'settings' ) ) ),
-			esc_html__( 'Settings', 'ipscanner' )
+			esc_html__( 'Settings', 'ipscanner-bot-blocker' )
 		);
 	}
 }

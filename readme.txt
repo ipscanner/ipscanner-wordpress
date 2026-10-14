@@ -1,6 +1,6 @@
 === IPScanner – Block Bots, VPNs & Proxies ===
 Contributors: ipscanner
-Tags: security, bot protection, vpn, proxy, tor
+Tags: captcha, anti-spam, bot protection, vpn blocker, registration spam
 Requires at least: 6.0
 Tested up to: 7.1
 Requires PHP: 7.4
@@ -8,9 +8,19 @@ Stable tag: 0.1.3
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
-Block bots, Tor, VPN and proxy traffic on your site, login, registration, comments and WooCommerce checkout.
+Invisible CAPTCHA alternative. Stops fake signups, spam registrations, form spam and card-testing bots, plus VPN, proxy and Tor traffic.
 
 == Description ==
+
+A CAPTCHA alternative with no puzzle. IPScanner checks each visitor on the server and blocks bots before they reach your forms.
+
+**What it stops**
+
+* Fake signups and spam registrations on WordPress and WooCommerce
+* Comment spam and contact form spam
+* Card-testing bots on WooCommerce checkout
+* Login attacks from bots, Tor and proxies
+* VPN and proxy traffic where you don't want it
 
 IPScanner checks each visitor with the IPScanner API and sorts them into one class: human, verified crawler, AI agent, malicious automation, Tor, VPN, proxy, hosting or privacy relay. You choose which classes to block and where.
 
@@ -55,6 +65,10 @@ Choose Cloudflare or X-Forwarded-For under Visitor IP. Proxy headers are only re
 The key can also be set in wp-config.php with `define( 'IPSCANNER_API_KEY', 'pk_live_...' );`.
 
 == Frequently Asked Questions ==
+
+= Is it a CAPTCHA? =
+
+No. Visitors never solve a puzzle. The check runs on your server when a form is sent, and blocked visitors get an error message.
 
 = Do I need an account? =
 

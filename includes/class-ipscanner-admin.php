@@ -40,14 +40,23 @@ final class IPScanner_Admin {
 	private $api;
 
 	/**
+	 * Usage events.
+	 *
+	 * @var IPScanner_Telemetry
+	 */
+	private $telemetry;
+
+	/**
 	 * Constructor.
 	 *
-	 * @param IPScanner_Settings $settings Settings.
-	 * @param IPScanner_API      $api      API client.
+	 * @param IPScanner_Settings  $settings  Settings.
+	 * @param IPScanner_API       $api       API client.
+	 * @param IPScanner_Telemetry $telemetry Usage events.
 	 */
-	public function __construct( IPScanner_Settings $settings, IPScanner_API $api ) {
-		$this->settings = $settings;
-		$this->api      = $api;
+	public function __construct( IPScanner_Settings $settings, IPScanner_API $api, IPScanner_Telemetry $telemetry ) {
+		$this->settings  = $settings;
+		$this->api       = $api;
+		$this->telemetry = $telemetry;
 	}
 
 	/**
@@ -97,6 +106,17 @@ final class IPScanner_Admin {
 	public function enqueue( $hook ) {
 		if ( in_array( $hook, array( 'settings_page_' . self::PAGE, 'index.php' ), true ) ) {
 			wp_enqueue_style( 'ipscanner-admin', plugins_url( 'css/admin.css', IPSCANNER_FILE ), array(), IPSCANNER_VERSION );
+		}
+		if ( 'settings_page_' . self::PAGE === $hook ) {
+			wp_enqueue_script( 'ipscanner-admin', plugins_url( 'js/admin.js', IPSCANNER_FILE ), array(), IPSCANNER_VERSION, true );
+			wp_localize_script(
+				'ipscanner-admin',
+				'ipscannerConnect',
+				array(
+					'status'  => wp_nonce_url( add_query_arg( 'action', IPScanner_Connect::STATUS, admin_url( 'admin-ajax.php' ) ), IPScanner_Connect::STATUS ),
+					'waiting' => __( 'Finish in the IPScanner window…', 'ipscanner-bot-blocker' ),
+				)
+			);
 		}
 	}
 
@@ -292,6 +312,7 @@ final class IPScanner_Admin {
 			return;
 		}
 		$tab = $this->current_tab();
+		$this->track_view( $tab );
 		?>
 		<div class="wrap ipscanner">
 			<h1 class="ipscanner-title"><?php $this->mark( 28 ); ?> IPScanner</h1>
@@ -315,13 +336,63 @@ final class IPScanner_Admin {
 	}
 
 	/**
+	 * One wp_admin_viewed per tab every 12 hours.
+	 *
+	 * @param string $tab Open tab.
+	 */
+	private function track_view( $tab ) {
+		$view = 'overview' === $tab && $this->onboarding() ? 'onboarding' : $tab;
+		$key  = 'ipscanner_viewed_' . $view;
+		if ( ! $this->telemetry->enabled() || get_transient( $key ) ) {
+			return;
+		}
+		set_transient( $key, 1, 12 * HOUR_IN_SECONDS );
+		$this->telemetry->send( 'wp_admin_viewed', array( 'tab' => $view ) );
+	}
+
+	/**
+	 * The Connect button. Opens the IPScanner consent page in a popup (js/admin.js),
+	 * or in this tab without JavaScript or when popups are blocked.
+	 */
+	private function connect_button() {
+		?>
+		<p class="ipscanner-connect-row">
+			<a class="button button-primary ipscanner-connect" href="<?php echo esc_url( IPScanner_Connect::start_url() ); ?>" data-ipscanner-connect><?php esc_html_e( 'Connect with IPScanner', 'ipscanner-bot-blocker' ); ?></a>
+			<span class="ipscanner-connect-wait" aria-live="polite"></span>
+		</p>
+		<?php
+	}
+
+	/**
+	 * "Connected as ..." with the account and plan when they are known.
+	 *
+	 * @param array|null $usage Usage result, for the plan.
+	 * @return string
+	 */
+	private function connected_text( $usage ) {
+		$account = get_option( IPScanner_Connect::ACCOUNT );
+		$email   = is_array( $account ) && ! empty( $account['email'] ) ? (string) $account['email'] : '';
+		$plan    = is_array( $usage ) && $usage['ok'] ? self::plan( $usage )['plan'] : '';
+		if ( '' !== $email && '' !== $plan ) {
+			/* translators: 1: account email, 2: plan name */
+			return sprintf( __( 'Connected as %1$s, %2$s plan', 'ipscanner-bot-blocker' ), $email, $plan );
+		}
+		if ( '' !== $email ) {
+			/* translators: %s: account email */
+			return sprintf( __( 'Connected as %s', 'ipscanner-bot-blocker' ), $email );
+		}
+		/* translators: %s: plan name */
+		return '' === $plan ? __( 'Connected', 'ipscanner-bot-blocker' ) : sprintf( __( 'Connected, %s plan', 'ipscanner-bot-blocker' ), $plan );
+	}
+
+	/**
 	 * The welcome card shown until a key is connected and the areas are chosen.
 	 */
 	private function render_onboarding() {
 		$key   = $this->settings->api_key();
 		$usage = '' === $key ? null : $this->usage( true );
 		$ok    = is_array( $usage ) && $usage['ok'];
-		$step  = '' === $key ? 1 : ( $ok ? 3 : 2 );
+		$step  = $ok ? 2 : 1;
 		$state = function ( $n ) use ( $step ) {
 			if ( $n < $step ) {
 				return 'is-done';
@@ -344,7 +415,7 @@ final class IPScanner_Admin {
 			<div class="ipscanner-welcome-head">
 				<?php $this->mark( 40 ); ?>
 				<h2><?php esc_html_e( 'Protect logins, forms and checkout', 'ipscanner-bot-blocker' ); ?></h2>
-				<?php if ( $step >= 3 ) : ?>
+				<?php if ( $step >= 2 ) : ?>
 					<form method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>" class="ipscanner-welcome-skip">
 						<input type="hidden" name="action" value="ipscanner_onboard_dismiss">
 						<?php wp_nonce_field( 'ipscanner_onboard_dismiss' ); ?>
@@ -352,55 +423,42 @@ final class IPScanner_Admin {
 					</form>
 				<?php endif; ?>
 			</div>
-			<ol class="ipscanner-steps">
+			<ol class="ipscanner-steps is-two">
 				<li class="ipscanner-step <?php echo esc_attr( $state( 1 ) ); ?>">
-					<span class="ipscanner-step-icon dashicons <?php echo esc_attr( 1 < $step ? 'dashicons-yes-alt' : 'dashicons-admin-network' ); ?>" aria-hidden="true"></span>
-					<h3><?php esc_html_e( 'Get a free API key', 'ipscanner-bot-blocker' ); ?></h3>
+					<span class="ipscanner-step-icon dashicons <?php echo esc_attr( 1 < $step ? 'dashicons-yes-alt' : 'dashicons-admin-links' ); ?>" aria-hidden="true"></span>
+					<h3><?php esc_html_e( 'Connect your IPScanner account', 'ipscanner-bot-blocker' ); ?></h3>
 					<?php if ( 1 < $step ) : ?>
-						<p class="ipscanner-step-note"><?php esc_html_e( 'Done', 'ipscanner-bot-blocker' ); ?></p>
+						<p class="ipscanner-step-note"><?php echo esc_html( $this->connected_text( $usage ) ); ?></p>
 					<?php else : ?>
-						<p><a class="button button-primary" href="<?php echo esc_url( self::KEYS_URL ); ?>" target="_blank" rel="noopener"><?php esc_html_e( 'Get API key', 'ipscanner-bot-blocker' ); ?><span class="screen-reader-text"> <?php esc_html_e( '(opens in a new tab)', 'ipscanner-bot-blocker' ); ?></span></a></p>
-					<?php endif; ?>
-				</li>
-				<li class="ipscanner-step <?php echo esc_attr( $state( 2 ) ); ?>">
-					<span class="ipscanner-step-icon dashicons <?php echo esc_attr( 2 < $step ? 'dashicons-yes-alt' : 'dashicons-admin-links' ); ?>" aria-hidden="true"></span>
-					<h3><label for="ipscanner-onboard-key"><?php esc_html_e( 'Paste it here', 'ipscanner-bot-blocker' ); ?></label></h3>
-					<?php if ( 2 < $step ) : ?>
-						<p class="ipscanner-step-note">
-							<?php
-							$plan = self::plan( $usage );
-							echo esc_html(
-								'' === $plan['plan']
-									? __( 'Connected', 'ipscanner-bot-blocker' )
-									/* translators: %s: plan name */
-									: sprintf( __( 'Connected, %s plan', 'ipscanner-bot-blocker' ), $plan['plan'] )
-							);
-							?>
-						</p>
-					<?php else : ?>
-						<form method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>" class="ipscanner-inline-form">
-							<input type="hidden" name="action" value="ipscanner_onboard_key">
-							<?php wp_nonce_field( 'ipscanner_onboard_key' ); ?>
-							<input type="password" id="ipscanner-onboard-key" name="api_key" class="regular-text" placeholder="pk_live_..." autocomplete="new-password" spellcheck="false" required>
-							<button type="submit" class="button <?php echo esc_attr( 2 === $step ? 'button-primary' : '' ); ?>"><?php esc_html_e( 'Save', 'ipscanner-bot-blocker' ); ?></button>
-						</form>
+						<?php $this->connect_button(); ?>
+						<p class="ipscanner-step-note"><?php esc_html_e( 'Sign up or sign in, free, no credit card.', 'ipscanner-bot-blocker' ); ?></p>
 						<?php if ( is_array( $usage ) && ! $ok ) : ?>
 							<p class="ipscanner-step-error"><?php echo esc_html( $this->failure_text( $usage ) ); ?></p>
 						<?php endif; ?>
+						<details class="ipscanner-paste">
+							<summary><?php esc_html_e( 'Use an API key instead', 'ipscanner-bot-blocker' ); ?></summary>
+							<form method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>" class="ipscanner-inline-form">
+								<input type="hidden" name="action" value="ipscanner_onboard_key">
+								<?php wp_nonce_field( 'ipscanner_onboard_key' ); ?>
+								<label for="ipscanner-onboard-key" class="screen-reader-text"><?php esc_html_e( 'API key', 'ipscanner-bot-blocker' ); ?></label>
+								<input type="password" id="ipscanner-onboard-key" name="api_key" class="regular-text" placeholder="pk_live_..." autocomplete="new-password" spellcheck="false" required>
+								<button type="submit" class="button"><?php esc_html_e( 'Save', 'ipscanner-bot-blocker' ); ?></button>
+							</form>
+						</details>
 					<?php endif; ?>
 				</li>
-				<li class="ipscanner-step <?php echo esc_attr( $state( 3 ) ); ?>">
+				<li class="ipscanner-step <?php echo esc_attr( $state( 2 ) ); ?>">
 					<span class="ipscanner-step-icon dashicons dashicons-shield" aria-hidden="true"></span>
 					<h3><?php esc_html_e( 'Choose what to protect', 'ipscanner-bot-blocker' ); ?></h3>
 					<form method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>">
 						<input type="hidden" name="action" value="ipscanner_onboard_areas">
 						<?php wp_nonce_field( 'ipscanner_onboard_areas' ); ?>
-						<fieldset <?php disabled( '' === $key ); ?>>
+						<fieldset <?php disabled( ! $ok ); ?>>
 							<legend class="screen-reader-text"><?php esc_html_e( 'Choose what to protect', 'ipscanner-bot-blocker' ); ?></legend>
 							<?php foreach ( $quick as $area => $label ) : ?>
 								<label><input type="checkbox" name="areas[]" value="<?php echo esc_attr( $area ); ?>" <?php checked( in_array( $area, $areas, true ) ); ?>> <?php echo esc_html( $label ); ?></label>
 							<?php endforeach; ?>
-							<p><button type="submit" class="button <?php echo esc_attr( 3 === $step ? 'button-primary' : '' ); ?>"><?php esc_html_e( 'Save', 'ipscanner-bot-blocker' ); ?></button></p>
+							<p><button type="submit" class="button <?php echo esc_attr( 2 === $step ? 'button-primary' : '' ); ?>"><?php esc_html_e( 'Save', 'ipscanner-bot-blocker' ); ?></button></p>
 						</fieldset>
 					</form>
 				</li>
@@ -537,7 +595,20 @@ final class IPScanner_Admin {
 					<td>
 						<?php if ( $by_const ) : ?>
 							<p><?php esc_html_e( 'Set by the IPSCANNER_API_KEY constant.', 'ipscanner-bot-blocker' ); ?></p>
+						<?php elseif ( '' !== $s['api_key'] ) : ?>
+							<p class="ipscanner-connected">
+								<span class="ipscanner-dot is-ok" aria-hidden="true"></span>
+								<?php echo esc_html( $this->connected_text( $this->usage( false ) ) ); ?>
+								<button type="submit" form="ipscanner-disconnect" class="button-link ipscanner-disconnect"><?php esc_html_e( 'Disconnect', 'ipscanner-bot-blocker' ); ?></button>
+							</p>
+							<details class="ipscanner-paste">
+								<summary><?php esc_html_e( 'Use a different API key', 'ipscanner-bot-blocker' ); ?></summary>
+								<input type="password" id="ipscanner-api-key" name="<?php echo esc_attr( $name ); ?>[api_key]" value="" class="regular-text" autocomplete="new-password" spellcheck="false"
+									placeholder="<?php echo esc_attr( sprintf( /* translators: %s: last 4 characters of the key */ __( 'Saved, ends in %s', 'ipscanner-bot-blocker' ), substr( $s['api_key'], -4 ) ) ); ?>">
+							</details>
 						<?php else : ?>
+							<?php $this->connect_button(); ?>
+							<p class="description"><?php esc_html_e( 'Or paste an API key:', 'ipscanner-bot-blocker' ); ?></p>
 							<input type="password" id="ipscanner-api-key" name="<?php echo esc_attr( $name ); ?>[api_key]" value="" class="regular-text" autocomplete="new-password" spellcheck="false"
 								placeholder="<?php echo esc_attr( '' === $s['api_key'] ? 'pk_live_...' : sprintf( /* translators: %s: last 4 characters of the key */ __( 'Saved, ends in %s', 'ipscanner-bot-blocker' ), substr( $s['api_key'], -4 ) ) ); ?>">
 							<?php if ( '' !== $s['api_key'] ) : ?>
@@ -672,6 +743,13 @@ final class IPScanner_Admin {
 						<p class="description"><?php esc_html_e( 'If IPScanner does not answer in time, the visitor is allowed.', 'ipscanner-bot-blocker' ); ?></p>
 					</td>
 				</tr>
+				<tr>
+					<th scope="row"><?php esc_html_e( 'Usage stats', 'ipscanner-bot-blocker' ); ?></th>
+					<td>
+						<label><input type="checkbox" name="<?php echo esc_attr( $name ); ?>[share_usage]" value="1" <?php checked( $s['share_usage'] ); ?>> <?php esc_html_e( 'Send plugin usage stats to IPScanner', 'ipscanner-bot-blocker' ); ?></label>
+						<p class="description"><?php esc_html_e( 'Settings changes, connection tests and daily totals. No visitor data.', 'ipscanner-bot-blocker' ); ?></p>
+					</td>
+				</tr>
 			</table>
 
 			<?php submit_button(); ?>
@@ -679,6 +757,10 @@ final class IPScanner_Admin {
 		<form method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>" id="ipscanner-test">
 			<input type="hidden" name="action" value="ipscanner_test">
 			<?php wp_nonce_field( 'ipscanner_test' ); ?>
+		</form>
+		<form method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>" id="ipscanner-disconnect">
+			<input type="hidden" name="action" value="<?php echo esc_attr( IPScanner_Connect::DISCONNECT ); ?>">
+			<?php wp_nonce_field( IPScanner_Connect::DISCONNECT ); ?>
 		</form>
 		<?php
 	}
@@ -845,6 +927,13 @@ final class IPScanner_Admin {
 			}
 		}
 
+		$this->telemetry->send(
+			'wp_test_connection',
+			array(
+				'ok'   => (bool) $usage['ok'],
+				'code' => (int) $usage['code'],
+			)
+		);
 		$this->queue_notices( $lines );
 		wp_safe_redirect( $this->page_url( array( 'tab' => 'settings' ) ) );
 		exit;
@@ -883,10 +972,13 @@ final class IPScanner_Admin {
 		if ( ! class_exists( 'WooCommerce' ) && in_array( 'woo_checkout', (array) $values['areas'], true ) ) {
 			$keep[] = 'woo_checkout';
 		}
-		$values['areas'] = array_values( array_unique( array_merge( $keep, array_intersect( self::QUICK_AREAS, $picked ) ) ) );
+		$values['areas']            = array_values( array_unique( array_merge( $keep, array_intersect( self::QUICK_AREAS, $picked ) ) ) );
+		IPScanner_Telemetry::$quiet = true;
 		update_option( IPScanner_Settings::OPTION, $values );
+		IPScanner_Telemetry::$quiet = false;
 		$this->settings->flush();
 		delete_option( self::ONBOARDING );
+		$this->telemetry->send( 'wp_onboarding_done', array_merge( array( 'skipped' => false ), IPScanner_Telemetry::summary( $this->settings->all() ) ) );
 		$this->queue_notices(
 			array(
 				array(
@@ -908,6 +1000,7 @@ final class IPScanner_Admin {
 		$this->require_cap();
 		check_admin_referer( 'ipscanner_onboard_dismiss' );
 		delete_option( self::ONBOARDING );
+		$this->telemetry->send( 'wp_onboarding_done', array_merge( array( 'skipped' => true ), IPScanner_Telemetry::summary( $this->settings->all() ) ) );
 		wp_safe_redirect( $this->page_url() );
 		exit;
 	}

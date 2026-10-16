@@ -42,6 +42,7 @@ final class IPScanner_Settings {
 			'block_message'   => '',
 			'show_credit'     => false,
 			'timeout'         => 1.5,
+			'share_usage'     => false,
 		);
 	}
 
@@ -180,6 +181,7 @@ final class IPScanner_Settings {
 
 		$out['allow_admins'] = ! empty( $input['allow_admins'] );
 		$out['show_credit']  = ! empty( $input['show_credit'] );
+		$out['share_usage']  = ! empty( $input['share_usage'] );
 
 		$sources          = array( IPScanner_Request::SOURCE_REMOTE_ADDR, IPScanner_Request::SOURCE_CLOUDFLARE, IPScanner_Request::SOURCE_FORWARDED );
 		$source           = isset( $input['ip_source'] ) ? sanitize_key( $input['ip_source'] ) : '';

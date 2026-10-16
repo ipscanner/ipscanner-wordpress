@@ -57,10 +57,11 @@ Choose Cloudflare or X-Forwarded-For under Visitor IP. Proxy headers are only re
 == Installation ==
 
 1. Install and activate the plugin.
-2. Create an API key at [ipscanner.io](https://ipscanner.io/dashboard/apikeys).
-3. Go to Settings > IPScanner, paste the key and choose what to protect.
-4. Optional: create a site in the [IPScanner dashboard](https://ipscanner.io/dashboard/sites) and paste its Site ID under Settings.
-5. Leave the mode on Monitor for a few days, check the Overview tab, then switch to Enforce.
+2. Go to Settings > IPScanner and click Connect with IPScanner. Sign up or sign in in the window that opens and click Connect. The plugin gets an API key and a dashboard site for this WordPress site.
+3. Choose what to protect.
+4. Leave the mode on Monitor for a few days, check the Overview tab, then switch to Enforce.
+
+You can also paste an API key from [ipscanner.io](https://ipscanner.io/dashboard/apikeys) instead of connecting.
 
 The key can also be set in wp-config.php with `define( 'IPSCANNER_API_KEY', 'pk_live_...' );`.
 
@@ -72,7 +73,7 @@ No. Visitors never solve a puzzle. The check runs on your server when a form is 
 
 = Do I need an account? =
 
-Yes. The plugin calls the IPScanner API with your API key. Any plan works. On the Free plan, sites managed from the dashboard run in monitor mode.
+Yes. Connect with IPScanner creates a free one in a few clicks, or signs you in to an existing one. Any plan works. On the Free plan, sites managed from the dashboard run in monitor mode.
 
 = Will it block Google or Bing? =
 
@@ -101,8 +102,10 @@ This plugin connects to the IPScanner API at https://ipscanner.io, run by IPScan
 * When a protected form is submitted, or a page is viewed with whole site protection on, the plugin sends the visitor's IP address, user agent and these request headers: Accept, Accept-Language, Accept-Encoding, Sec-CH-UA and Sec-Fetch headers. It also sends a random request ID and your Site ID when one is set. Endpoint: `POST /v1/edge/check`. Results are cached on your site for 10 minutes per visitor.
 * With a Site ID set, the plugin reads the site's policy (no visitor data) at most every 30 seconds. Endpoint: `GET /v1/sites/{site}/policy`.
 * When an administrator opens Settings > IPScanner (at most every 5 minutes) or clicks Test connection, the plugin reads the plan and usage of the API key (no visitor data). Endpoint: `GET /v1/usage/summary`.
+* Connect with IPScanner opens https://ipscanner.io/connect/wordpress with this site's admin URL, home URL, name, plugin and WordPress versions. After you approve, the plugin exchanges a one-time code for the API key and Site ID. Endpoint: `POST /api/connect/wordpress/token`.
+* With "Send plugin usage stats" on (Settings > Advanced; turned on when you connect, since the connect window asks for it), the plugin sends usage events with the API key: connected or disconnected, settings changed (which settings, the mode, protected areas and blocked classes), connection tested, the settings page opened (at most twice a day per tab), plugin updated or deactivated, and once a day the last 24 hours' totals (checked, blocked, top class) with the PHP and WordPress versions, locale and whether WooCommerce, Contact Form 7 or WPForms are active. No visitor data. Endpoint: `POST /api/wordpress/events`.
 
-Nothing is sent before an API key is saved.
+Nothing is sent before you connect or save an API key.
 
 Terms of service: https://ipscanner.io/terms
 Privacy policy: https://ipscanner.io/privacy

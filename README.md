@@ -4,7 +4,7 @@ WordPress plugin that checks visitors with [IPScanner](https://ipscanner.io) and
 
 ## Install
 
-Download `ipscanner.zip` from [Releases](https://github.com/ipscanner/ipscanner-wordpress/releases), then Plugins > Add New > Upload Plugin. Go to Settings > IPScanner, paste your API key and Site ID, and choose the protected areas.
+Install [IPScanner – Block Bots, VPNs & Proxies](https://wordpress.org/plugins/ipscanner-bot-blocker/) from Plugins > Add New. Go to Settings > IPScanner, click Connect with IPScanner, sign up or sign in in the popup and choose the protected areas. Pasting an API key and Site ID still works.
 
 Requires WordPress 6.0+ and PHP 7.4+.
 
@@ -20,6 +20,8 @@ Requires WordPress 6.0+ and PHP 7.4+.
 | Fail open | Timeout 1.5 s by default. On a timeout or error the visitor is allowed and checks pause for 30 s (5 minutes on 401, 403 or 429). |
 | Blocked | Pages get a 403 page. Forms get an error message. Both use the configurable block message. |
 | Visitor IP | `REMOTE_ADDR` by default. Cloudflare (`CF-Connecting-IP`) or `X-Forwarded-For` only from trusted proxies. |
+| Connect | OAuth 2.0 authorization code with PKCE (S256). The popup opens `https://ipscanner.io/connect/wordpress`, comes back to `admin-post.php?action=ipscanner_connect_callback`, and the plugin swaps the code server to server at `POST /api/connect/wordpress/token` for an API key named `WordPress · <host>` and a Site ID. |
+| Usage stats | Opt in (on after Connect): admin actions and a daily summary to `POST /api/wordpress/events`, no visitor data. |
 | Debug | With `WP_DEBUG`, front end responses carry `X-IPScanner-Status`, `X-IPScanner-Class` and `X-IPScanner-Action`. |
 
 Requests send `X-IPScanner-Source: wordpress` and `User-Agent: ipscanner-wordpress/<version>`.
@@ -29,6 +31,7 @@ Constants for `wp-config.php`:
 ```php
 define( 'IPSCANNER_API_KEY', 'pk_live_...' );           // overrides the saved key
 define( 'IPSCANNER_API_BASE', 'http://localhost:3050' ); // testing only
+define( 'IPSCANNER_APP_BASE', 'http://localhost:3000' ); // testing only: connect and usage stats
 ```
 
 Filters: `ipscanner_skip` (bool, ip, area) and `ipscanner_decision` (result, verdict, area).

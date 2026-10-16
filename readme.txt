@@ -4,7 +4,7 @@ Tags: captcha, anti-spam, bot protection, vpn blocker, registration spam
 Requires at least: 6.0
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 0.1.3
+Stable tag: 0.2.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -114,13 +114,19 @@ Source code: https://github.com/ipscanner/ipscanner-wordpress
 
 == Screenshots ==
 
-1. Getting started.
-2. Overview: connection, last 24 hours and recent decisions.
-3. Settings.
-4. The block page a blocked visitor sees.
-5. A blocked login attempt.
+1. Getting started: connect your account, then choose what to protect.
+2. Connect with IPScanner: sign up or sign in, no key to copy.
+3. Overview: connection, last 24 hours and recent decisions.
+4. Settings.
+5. The block page a blocked visitor sees.
+6. A blocked login attempt.
 
 == Changelog ==
+
+= 0.2.0 =
+* Connect with IPScanner: sign up or sign in in a popup instead of copying an API key. Connecting also adds the site to your IPScanner dashboard.
+* Disconnect button under Settings.
+* Optional usage stats (Settings > Advanced).
 
 = 0.1.3 =
 * Plugin renamed to "IPScanner – Block Bots, VPNs & Proxies".

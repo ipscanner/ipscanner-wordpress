@@ -8,11 +8,11 @@ Stable tag: 0.2.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
-Invisible CAPTCHA alternative. Stops fake signups, spam registrations, form spam and card-testing bots, plus VPN, proxy and Tor traffic.
+A CAPTCHA alternative with no puzzle. Stops fake signups, spam registrations, form spam and card-testing bots, plus VPN, proxy and Tor traffic.
 
 == Description ==
 
-A CAPTCHA alternative with no puzzle. IPScanner checks each visitor on the server and blocks bots before they reach your forms.
+IPScanner checks each visitor on the server and blocks bots before they reach your forms. Real people never see a challenge.
 
 **What it stops**
 
@@ -44,7 +44,7 @@ Forms get an error message. Pages get a short 403 page.
 
 **What it costs**
 
-Each new visitor check uses 2 requests from your IPScanner allowance. A visitor is checked at most once every 10 minutes. Static files, the admin area, AJAX, cron and REST requests are never checked.
+Each new visitor check uses 2 requests from your IPScanner allowance. A visitor is checked at most once every 10 minutes. The whole front end check skips static files, the admin area, AJAX, cron and REST requests. Logins, forms and checkout are still checked when they are sent that way, including the WooCommerce block checkout (Store API).
 
 **Fail open**
 

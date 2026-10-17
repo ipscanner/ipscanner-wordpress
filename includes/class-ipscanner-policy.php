@@ -74,6 +74,8 @@ final class IPScanner_Policy {
 	 * dashboard policy (site mode) matches the traffic class only, like the
 	 * Cloudflare Worker.
 	 *
+	 * An edge answer with mode "monitor" (the plan may not block) overrides $mode.
+	 *
 	 * @param array  $verdict       Edge check response.
 	 * @param string $mode          monitor or enforce.
 	 * @param array  $policy        Class to action map.
@@ -81,6 +83,9 @@ final class IPScanner_Policy {
 	 * @return array{class:string,action:string,decision:string}
 	 */
 	public static function decide( array $verdict, $mode, array $policy, $match_network ) {
+		if ( isset( $verdict['mode'] ) && self::MODE_MONITOR === $verdict['mode'] ) {
+			$mode = self::MODE_MONITOR;
+		}
 		$class = isset( $verdict['class'] ) && is_string( $verdict['class'] ) ? $verdict['class'] : 'human';
 		$out   = array(
 			'class'    => $class,

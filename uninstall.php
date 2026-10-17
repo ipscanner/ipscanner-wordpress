@@ -12,7 +12,7 @@ defined( 'WP_UNINSTALL_PLUGIN' ) || exit;
  */
 function ipscanner_uninstall_site() {
 	global $wpdb;
-	foreach ( array( 'ipscanner_settings', 'ipscanner_log', 'ipscanner_stats', 'ipscanner_onboarding', 'ipscanner_policy_cache', 'ipscanner_last_error', 'ipscanner_account', 'ipscanner_version' ) as $ipscanner_option ) {
+	foreach ( array( 'ipscanner_settings', 'ipscanner_log', 'ipscanner_stats', 'ipscanner_onboarding', 'ipscanner_policy_cache', 'ipscanner_last_error', 'ipscanner_edge_mode', 'ipscanner_account', 'ipscanner_version' ) as $ipscanner_option ) {
 		delete_option( $ipscanner_option );
 	}
 	// Cached verdicts are transients keyed by a hash, so they are removed by prefix.

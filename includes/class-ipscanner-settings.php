@@ -195,6 +195,7 @@ final class IPScanner_Settings {
 		if ( $out['site_id'] !== $previous['site_id'] || $out['api_key'] !== $previous['api_key'] ) {
 			delete_option( 'ipscanner_policy_cache' );
 			delete_option( 'ipscanner_last_error' );
+			delete_option( IPScanner_API::EDGE_MODE );
 			delete_transient( 'ipscanner_backoff' );
 			delete_transient( 'ipscanner_usage' );
 		}

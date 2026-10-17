@@ -53,7 +53,7 @@ function setSettings(patch) {
 
 function reset() {
 	wp('transient', 'delete', '--all');
-	wp('eval', 'delete_option("ipscanner_log"); delete_option("ipscanner_stats"); delete_option("ipscanner_policy_cache"); delete_option("ipscanner_last_error");');
+	wp('eval', 'delete_option("ipscanner_log"); delete_option("ipscanner_stats"); delete_option("ipscanner_policy_cache"); delete_option("ipscanner_last_error"); delete_option("ipscanner_edge_mode");');
 }
 
 function log() {
@@ -514,7 +514,61 @@ reset();
 wp('config', 'set', 'IPSCANNER_API_BASE', realBase);
 slow.close();
 
-// 11. API down.
+// 11. Plan in monitor mode: the edge check answers mode monitor, nothing is blocked even in enforce mode.
+let planMode = 'monitor';
+const plan = http
+	.createServer((req, res) => {
+		res.setHeader('Content-Type', 'application/json');
+		if (req.url.startsWith('/v1/edge/check')) {
+			res.end(JSON.stringify({ class: 'tor', mode: planMode, agent: null, network: { networkClass: 'tor' }, site: null }));
+		} else if (req.url.startsWith('/v1/usage/summary')) {
+			res.end(JSON.stringify({ plan: 'Free', used: 0, limit: 1000 }));
+		} else {
+			res.statusCode = 404;
+			res.end('{}');
+		}
+	})
+	.listen(3058);
+wp('config', 'set', 'IPSCANNER_API_BASE', 'http://host.docker.internal:3058');
+setSettings({ site_id: '', mode: 'enforce', block_classes: ['tor'], areas: ['site', 'login'], timeout: 3 });
+reset();
+{
+	const r = await visit('tor');
+	record('plan monitor: tor gets the page in enforce mode', 200, r.status);
+	record('plan monitor: X-IPScanner-Action', 'would_block', r.action);
+	await r.ctx.close();
+	const l = await login('tor', 'e2esub', 'Sub-pass-123');
+	record('plan monitor: tor can log in', 'logged in', l.outcome);
+	await l.ctx.close();
+	record('plan monitor: logged as would block', 'would_block', log()[0]?.decision);
+	const { ctx, page } = await adminContext();
+	await page.goto('/wp-admin/options-general.php?page=ipscanner');
+	record('plan monitor: overview shows monitor mode', 'Monitor mode', await page.locator('.ipscanner-status').textContent());
+	record('plan monitor: overview note', 'Your IPScanner plan runs in monitor mode', await page.locator('.ipscanner-status').textContent());
+	await page.goto('/wp-admin/options-general.php?page=ipscanner&tab=settings');
+	const row = page.locator('tr', { has: page.locator('input[value="enforce"]') });
+	record('plan monitor: settings note', 'Blocking needs Starter or higher.', await row.textContent());
+	record('plan monitor: pricing link', 1, await row.locator('a[href="https://ipscanner.io/pricing"]').count());
+	await row.screenshot({ path: `${SHOTS}/plan-monitor-note.png` });
+	await ctx.close();
+}
+for (const [label, mode] of [['enforce', 'enforce'], ['no mode field', undefined]]) {
+	planMode = mode;
+	reset();
+	const r = await visit('tor');
+	record(`plan ${label}: tor blocked`, 403, r.status);
+	await r.ctx.close();
+}
+{
+	const { ctx, page } = await adminContext();
+	await page.goto('/wp-admin/options-general.php?page=ipscanner&tab=settings');
+	record('plan enforce: no settings note', 0, await page.locator('a[href="https://ipscanner.io/pricing"]').count());
+	await ctx.close();
+}
+wp('config', 'set', 'IPSCANNER_API_BASE', realBase);
+plan.close();
+
+// 12. API down.
 if (process.env.API_STOP) {
 	execSync(process.env.API_STOP);
 	reset();

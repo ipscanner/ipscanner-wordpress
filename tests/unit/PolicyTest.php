@@ -108,6 +108,44 @@ final class PolicyTest extends TestCase {
 		$this->assertSame( 'block', $out['decision'] );
 	}
 
+	public function test_edge_monitor_never_blocks_in_local_mode() {
+		$verdict         = $this->verdict( 'tor', 'tor' );
+		$verdict['mode'] = 'monitor';
+		$out             = IPScanner_Policy::decide( $verdict, 'enforce', IPScanner_Policy::local_policy( array( 'tor' ) ), true );
+		$this->assertSame( 'block', $out['action'] );
+		$this->assertSame( 'would_block', $out['decision'] );
+	}
+
+	public function test_edge_monitor_never_blocks_in_site_mode() {
+		$policy          = array(
+			'malicious_automation' => 'block',
+			'hosting'              => 'flag',
+		);
+		$bot             = $this->verdict( 'malicious_automation' );
+		$bot['mode']     = 'monitor';
+		$hosting         = $this->verdict( 'hosting', 'hosting' );
+		$hosting['mode'] = 'monitor';
+		$this->assertSame( 'would_block', IPScanner_Policy::decide( $bot, 'enforce', $policy, false )['decision'] );
+		$this->assertSame( 'would_flag', IPScanner_Policy::decide( $hosting, 'enforce', $policy, false )['decision'] );
+	}
+
+	public function test_edge_enforce_keeps_the_configured_mode() {
+		$verdict         = $this->verdict( 'tor', 'tor' );
+		$verdict['mode'] = 'enforce';
+		$policy          = IPScanner_Policy::local_policy( array( 'tor' ) );
+		$this->assertSame( 'block', IPScanner_Policy::decide( $verdict, 'enforce', $policy, true )['decision'] );
+		$this->assertSame( 'would_block', IPScanner_Policy::decide( $verdict, 'monitor', $policy, true )['decision'] );
+		$this->assertSame( 'block', IPScanner_Policy::decide( $verdict, 'enforce', array( 'tor' => 'block' ), false )['decision'] );
+	}
+
+	public function test_missing_or_unknown_edge_mode_changes_nothing() {
+		$policy = IPScanner_Policy::local_policy( array( 'tor' ) );
+		$this->assertSame( 'block', IPScanner_Policy::decide( $this->verdict( 'tor', 'tor' ), 'enforce', $policy, true )['decision'] );
+		$verdict         = $this->verdict( 'tor', 'tor' );
+		$verdict['mode'] = 'paused';
+		$this->assertSame( 'block', IPScanner_Policy::decide( $verdict, 'enforce', $policy, true )['decision'] );
+	}
+
 	public function test_network_traffic_class() {
 		$this->assertSame( 'proxy', IPScanner_Policy::network_traffic_class( 'residential_proxy' ) );
 		$this->assertSame( 'hosting', IPScanner_Policy::network_traffic_class( 'datacenter' ) );

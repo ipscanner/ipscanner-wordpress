@@ -16,6 +16,7 @@ final class IPScanner_Admin {
 	const DASHBOARD_URL = 'https://ipscanner.io/dashboard/sites';
 	const KEYS_URL      = 'https://ipscanner.io/dashboard/apikeys';
 	const NEW_SITE_URL  = 'https://ipscanner.io/dashboard/sites?new=wordpress';
+	const PRICING_URL   = 'https://ipscanner.io/pricing';
 	const ONBOARDING    = 'ipscanner_onboarding';
 	const USAGE         = 'ipscanner_usage';
 	const LOG_ROWS      = 10;
@@ -268,11 +269,15 @@ final class IPScanner_Admin {
 	}
 
 	/**
-	 * The mode in effect: the dashboard policy's mode when a Site ID is set.
+	 * The mode in effect: monitor when the last edge check said the plan only
+	 * monitors, else the dashboard policy's mode when a Site ID is set.
 	 *
 	 * @return string
 	 */
 	private function mode() {
+		if ( IPScanner_API::edge_monitor() ) {
+			return IPScanner_Policy::MODE_MONITOR;
+		}
 		$site = (string) $this->settings->get( 'site_id' );
 		if ( '' === $site ) {
 			return (string) $this->settings->get( 'mode' );
@@ -282,6 +287,28 @@ final class IPScanner_Admin {
 			return (string) $entry['policy']['mode'];
 		}
 		return IPScanner_Policy::MODE_MONITOR;
+	}
+
+	/**
+	 * One line when the plan only monitors, so a chosen Enforce mode blocks nothing.
+	 *
+	 * @param string $css_class Paragraph class.
+	 */
+	private function plan_mode_note( $css_class ) {
+		if ( ! IPScanner_API::edge_monitor() ) {
+			return;
+		}
+		?>
+		<p class="<?php echo esc_attr( $css_class ); ?>">
+			<?php
+			printf(
+				/* translators: %s: link to the pricing page */
+				esc_html__( 'Your IPScanner plan runs in monitor mode, so nothing is blocked. Blocking needs %s.', 'ipscanner-bot-blocker' ),
+				'<a href="' . esc_url( self::PRICING_URL ) . '" target="_blank" rel="noopener">' . esc_html__( 'Starter or higher', 'ipscanner-bot-blocker' ) . '</a>'
+			);
+			?>
+		</p>
+		<?php
 	}
 
 	/**
@@ -493,6 +520,7 @@ final class IPScanner_Admin {
 				}
 				?>
 			</p>
+			<?php $this->plan_mode_note( 'ipscanner-muted' ); ?>
 			<?php if ( '' === $site ) : ?>
 				<p class="ipscanner-muted">
 					<a href="<?php echo esc_url( self::NEW_SITE_URL ); ?>" target="_blank" rel="noopener"><?php esc_html_e( 'Add this site to the IPScanner dashboard for traffic charts', 'ipscanner-bot-blocker' ); ?></a>
@@ -659,6 +687,7 @@ final class IPScanner_Admin {
 							<label><input type="radio" name="<?php echo esc_attr( $name ); ?>[mode]" value="monitor" <?php checked( $s['mode'], 'monitor' ); ?>> <?php esc_html_e( 'Monitor: record decisions, block nothing', 'ipscanner-bot-blocker' ); ?></label><br>
 							<label><input type="radio" name="<?php echo esc_attr( $name ); ?>[mode]" value="enforce" <?php checked( $s['mode'], 'enforce' ); ?>> <?php esc_html_e( 'Enforce: block the classes selected below', 'ipscanner-bot-blocker' ); ?></label>
 						</fieldset>
+						<?php $this->plan_mode_note( 'description' ); ?>
 					</td>
 				</tr>
 				<tr>

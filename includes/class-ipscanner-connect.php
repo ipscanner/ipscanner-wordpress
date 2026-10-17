@@ -293,6 +293,7 @@ final class IPScanner_Connect {
 		delete_transient( IPScanner_Admin::USAGE );
 		delete_option( 'ipscanner_last_error' );
 		delete_option( 'ipscanner_policy_cache' );
+		delete_option( IPScanner_API::EDGE_MODE );
 		$this->telemetry->send(
 			'wp_connected',
 			array(
@@ -397,6 +398,7 @@ final class IPScanner_Connect {
 		delete_option( IPScanner_Admin::ONBOARDING );
 		delete_option( 'ipscanner_policy_cache' );
 		delete_option( 'ipscanner_last_error' );
+		delete_option( IPScanner_API::EDGE_MODE );
 		delete_transient( IPScanner_Admin::USAGE );
 		wp_safe_redirect( self::page_url() );
 		exit;

@@ -19,6 +19,7 @@ class IPScanner_API {
 	const POLICY_RETRY  = 10;
 	const BACKOFF_ERROR = 30;
 	const BACKOFF_QUOTA = 300;
+	const EDGE_MODE     = 'ipscanner_edge_mode';
 
 	/**
 	 * Settings.
@@ -163,12 +164,23 @@ class IPScanner_API {
 		}
 
 		set_transient( $key, $res['data'], self::VERDICT_TTL );
+		$mode = isset( $res['data']['mode'] ) && in_array( $res['data']['mode'], array( IPScanner_Policy::MODE_MONITOR, IPScanner_Policy::MODE_ENFORCE ), true ) ? $res['data']['mode'] : '';
+		update_option( self::EDGE_MODE, $mode, false );
 		return array(
 			'ok'     => true,
 			'cached' => false,
 			'status' => 'ok',
 			'data'   => $res['data'],
 		);
+	}
+
+	/**
+	 * Whether the last fresh edge check said the account may only monitor.
+	 *
+	 * @return bool
+	 */
+	public static function edge_monitor() {
+		return IPScanner_Policy::MODE_MONITOR === get_option( self::EDGE_MODE, '' );
 	}
 
 	/**

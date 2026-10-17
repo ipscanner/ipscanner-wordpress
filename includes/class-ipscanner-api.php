@@ -12,14 +12,15 @@ defined( 'ABSPATH' ) || exit;
  */
 class IPScanner_API {
 
-	const DEFAULT_BASE  = 'https://ipscanner.io';
-	const VERDICT_TTL   = 600;
-	const POLICY_TTL    = 30;
-	const POLICY_STALE  = 86400;
-	const POLICY_RETRY  = 10;
-	const BACKOFF_ERROR = 30;
-	const BACKOFF_QUOTA = 300;
-	const EDGE_MODE     = 'ipscanner_edge_mode';
+	const DEFAULT_BASE   = 'https://ipscanner.io';
+	const VERDICT_TTL    = 600;
+	const POLICY_TTL     = 30;
+	const POLICY_STALE   = 86400;
+	const POLICY_RETRY   = 10;
+	const BACKOFF_ERROR  = 30;
+	const BACKOFF_QUOTA  = 300;
+	const EDGE_MODE      = 'ipscanner_edge_mode';
+	const ENFORCE_PAUSED = 'ipscanner_enforce_paused';
 
 	/**
 	 * Settings.
@@ -164,14 +165,31 @@ class IPScanner_API {
 		}
 
 		set_transient( $key, $res['data'], self::VERDICT_TTL );
-		$mode = isset( $res['data']['mode'] ) && in_array( $res['data']['mode'], array( IPScanner_Policy::MODE_MONITOR, IPScanner_Policy::MODE_ENFORCE ), true ) ? $res['data']['mode'] : '';
-		update_option( self::EDGE_MODE, $mode, false );
+		$this->record_edge_mode( isset( $res['data']['mode'] ) ? $res['data']['mode'] : '' );
 		return array(
 			'ok'     => true,
 			'cached' => false,
 			'status' => 'ok',
 			'data'   => $res['data'],
 		);
+	}
+
+	/**
+	 * Stores the account's edge mode. When the plan stops allowing Enforce (the
+	 * trial ended), a local Enforce switches to Monitor, and back after an upgrade.
+	 *
+	 * @param mixed $mode monitor, enforce, or anything else from an older API.
+	 */
+	public function record_edge_mode( $mode ) {
+		$mode = in_array( $mode, array( IPScanner_Policy::MODE_MONITOR, IPScanner_Policy::MODE_ENFORCE ), true ) ? $mode : '';
+		update_option( self::EDGE_MODE, $mode, false );
+		if ( IPScanner_Policy::MODE_MONITOR === $mode && IPScanner_Policy::MODE_ENFORCE === $this->settings->get( 'mode' ) ) {
+			update_option( self::ENFORCE_PAUSED, 1, false );
+			$this->settings->save_mode( IPScanner_Policy::MODE_MONITOR );
+		} elseif ( IPScanner_Policy::MODE_ENFORCE === $mode && get_option( self::ENFORCE_PAUSED ) ) {
+			delete_option( self::ENFORCE_PAUSED );
+			$this->settings->save_mode( IPScanner_Policy::MODE_ENFORCE );
+		}
 	}
 
 	/**

@@ -78,6 +78,25 @@ final class IPScanner_Settings {
 	}
 
 	/**
+	 * Saves the local mode when the plan changes it, without a settings event.
+	 *
+	 * @param string $mode monitor or enforce.
+	 */
+	public function save_mode( $mode ) {
+		$values         = $this->all();
+		$values['mode'] = $mode;
+		$quiet          = class_exists( 'IPScanner_Telemetry' );
+		if ( $quiet ) {
+			IPScanner_Telemetry::$quiet = true;
+		}
+		update_option( self::OPTION, $values );
+		if ( $quiet ) {
+			IPScanner_Telemetry::$quiet = false;
+		}
+		$this->flush();
+	}
+
+	/**
 	 * Whether an area is protected.
 	 *
 	 * @param string $area Area name.
@@ -154,7 +173,8 @@ final class IPScanner_Settings {
 			add_settings_error( self::OPTION, 'site_id', __( 'Site ID should look like site_ followed by letters and digits. It was not saved.', 'ipscanner-bot-blocker' ) );
 		}
 
-		$out['mode'] = isset( $input['mode'] ) && IPScanner_Policy::MODE_ENFORCE === $input['mode'] ? IPScanner_Policy::MODE_ENFORCE : IPScanner_Policy::MODE_MONITOR;
+		$locked      = IPScanner_API::edge_monitor() && $key === (string) $previous['api_key'];
+		$out['mode'] = isset( $input['mode'] ) && IPScanner_Policy::MODE_ENFORCE === $input['mode'] && ! $locked ? IPScanner_Policy::MODE_ENFORCE : IPScanner_Policy::MODE_MONITOR;
 
 		$areas        = isset( $input['areas'] ) && is_array( $input['areas'] ) ? array_map( 'sanitize_key', $input['areas'] ) : array();
 		$out['areas'] = array_values( array_intersect( self::AREAS, $areas ) );
@@ -196,6 +216,7 @@ final class IPScanner_Settings {
 			delete_option( 'ipscanner_policy_cache' );
 			delete_option( 'ipscanner_last_error' );
 			delete_option( IPScanner_API::EDGE_MODE );
+			delete_option( IPScanner_API::ENFORCE_PAUSED );
 			delete_transient( 'ipscanner_backoff' );
 			delete_transient( 'ipscanner_usage' );
 		}

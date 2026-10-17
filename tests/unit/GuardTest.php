@@ -179,4 +179,52 @@ final class GuardTest extends TestCase {
 		$this->guard()->check( 'login' );
 		$this->assertFalse( IPScanner_API::edge_monitor() );
 	}
+
+	private function stored_mode() {
+		return IPScanner_Test_WP::$options['ipscanner_settings']['mode'];
+	}
+
+	public function test_trial_end_switches_local_enforce_to_monitor() {
+		$this->edge( array( 'mode' => 'monitor' ) );
+		$this->guard()->check( 'login' );
+		$this->assertSame( 'monitor', $this->stored_mode() );
+		$this->assertSame( 1, get_option( IPScanner_API::ENFORCE_PAUSED ) );
+	}
+
+	public function test_upgrade_switches_enforce_back_on() {
+		$this->edge( array( 'mode' => 'monitor' ) );
+		$this->guard()->check( 'login' );
+
+		IPScanner_Test_WP::$transients = array();
+		$this->edge( array( 'mode' => 'enforce' ) );
+		$s     = new IPScanner_Settings();
+		$guard = new IPScanner_Guard( $s, new IPScanner_API( $s ) );
+		$this->assertSame( 'block', $guard->check( 'login' )['decision'] );
+		$this->assertSame( 'enforce', $this->stored_mode() );
+		$this->assertFalse( get_option( IPScanner_API::ENFORCE_PAUSED ) );
+	}
+
+	public function test_upgrade_keeps_a_chosen_monitor() {
+		$this->edge( array( 'mode' => 'enforce' ) );
+		$this->guard( array( 'mode' => 'monitor' ) )->check( 'login' );
+		$this->assertSame( 'monitor', $this->stored_mode() );
+		$this->assertFalse( get_option( IPScanner_API::ENFORCE_PAUSED ) );
+	}
+
+	public function test_answer_without_mode_keeps_local_enforce() {
+		$this->edge();
+		$this->guard()->check( 'login' );
+		$this->assertSame( 'enforce', $this->stored_mode() );
+		$this->assertFalse( get_option( IPScanner_API::ENFORCE_PAUSED ) );
+	}
+
+	public function test_settings_cannot_save_enforce_while_the_plan_monitors() {
+		IPScanner_Test_WP::$options['ipscanner_settings'] = array( 'api_key' => 'pk_test' );
+		update_option( IPScanner_API::EDGE_MODE, 'monitor' );
+		$this->assertSame( 'monitor', IPScanner_Settings::sanitize( array( 'mode' => 'enforce' ) )['mode'] );
+		// A new key is another account: its plan is not known yet.
+		$this->assertSame( 'enforce', IPScanner_Settings::sanitize( array( 'mode' => 'enforce', 'api_key' => 'pk_other' ) )['mode'] );
+		update_option( IPScanner_API::EDGE_MODE, 'enforce' );
+		$this->assertSame( 'enforce', IPScanner_Settings::sanitize( array( 'mode' => 'enforce' ) )['mode'] );
+	}
 }

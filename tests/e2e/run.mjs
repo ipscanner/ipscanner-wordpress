@@ -53,7 +53,7 @@ function setSettings(patch) {
 
 function reset() {
 	wp('transient', 'delete', '--all');
-	wp('eval', 'delete_option("ipscanner_log"); delete_option("ipscanner_stats"); delete_option("ipscanner_policy_cache"); delete_option("ipscanner_last_error"); delete_option("ipscanner_edge_mode");');
+	wp('eval', 'delete_option("ipscanner_log"); delete_option("ipscanner_stats"); delete_option("ipscanner_policy_cache"); delete_option("ipscanner_last_error"); delete_option("ipscanner_edge_mode"); delete_option("ipscanner_enforce_paused");');
 }
 
 function log() {
@@ -514,57 +514,96 @@ reset();
 wp('config', 'set', 'IPSCANNER_API_BASE', realBase);
 slow.close();
 
-// 11. Plan in monitor mode: the edge check answers mode monitor, nothing is blocked even in enforce mode.
+// 11. Trial ended: the edge check answers mode monitor, a local Enforce switches to Monitor
+// and is locked, and an upgrade (mode enforce) switches it back on.
 let planMode = 'monitor';
+let usageBody = { plan: 'Free', used: 0, limit: 1000 };
 const plan = http
 	.createServer((req, res) => {
 		res.setHeader('Content-Type', 'application/json');
 		if (req.url.startsWith('/v1/edge/check')) {
 			res.end(JSON.stringify({ class: 'tor', mode: planMode, agent: null, network: { networkClass: 'tor' }, site: null }));
 		} else if (req.url.startsWith('/v1/usage/summary')) {
-			res.end(JSON.stringify({ plan: 'Free', used: 0, limit: 1000 }));
+			res.end(JSON.stringify(usageBody));
 		} else {
 			res.statusCode = 404;
 			res.end('{}');
 		}
 	})
 	.listen(3058);
+const optionOf = (name) => wp('eval', `echo wp_json_encode( get_option( "${name}", false ) );`);
 wp('config', 'set', 'IPSCANNER_API_BASE', 'http://host.docker.internal:3058');
 setSettings({ site_id: '', mode: 'enforce', block_classes: ['tor'], areas: ['site', 'login'], timeout: 3 });
 reset();
 {
 	const r = await visit('tor');
-	record('plan monitor: tor gets the page in enforce mode', 200, r.status);
-	record('plan monitor: X-IPScanner-Action', 'would_block', r.action);
+	record('trial ended: tor gets the page', 200, r.status);
+	record('trial ended: X-IPScanner-Action', 'would_block', r.action);
 	await r.ctx.close();
+	record('trial ended: local mode switched to monitor', 'monitor', settings().mode);
+	record('trial ended: enforce remembered', '1', optionOf('ipscanner_enforce_paused'));
 	const l = await login('tor', 'e2esub', 'Sub-pass-123');
-	record('plan monitor: tor can log in', 'logged in', l.outcome);
+	record('trial ended: tor can log in', 'logged in', l.outcome);
 	await l.ctx.close();
-	record('plan monitor: logged as would block', 'would_block', log()[0]?.decision);
+	record('trial ended: logged as would block', 'would_block', log()[0]?.decision);
 	const { ctx, page } = await adminContext();
 	await page.goto('/wp-admin/options-general.php?page=ipscanner');
-	record('plan monitor: overview shows monitor mode', 'Monitor mode', await page.locator('.ipscanner-status').textContent());
-	record('plan monitor: overview note', 'Your IPScanner plan runs in monitor mode', await page.locator('.ipscanner-status').textContent());
+	record('trial ended: overview shows monitor mode', 'Monitor mode', await page.locator('.ipscanner-status').textContent());
+	record('trial ended: overview note', 'Your trial has ended, so nothing is blocked.', await page.locator('.ipscanner-status').textContent());
 	await page.goto('/wp-admin/options-general.php?page=ipscanner&tab=settings');
 	const row = page.locator('tr', { has: page.locator('input[value="enforce"]') });
-	record('plan monitor: settings note', 'Blocking needs Starter or higher.', await row.textContent());
-	record('plan monitor: pricing link', 1, await row.locator('a[href="https://ipscanner.io/pricing"]').count());
-	await row.screenshot({ path: `${SHOTS}/plan-monitor-note.png` });
+	record('trial ended: enforce disabled', true, await row.locator('input[value="enforce"]').isDisabled());
+	record('trial ended: monitor checked', true, await row.locator('input[value="monitor"]').isChecked());
+	record('trial ended: settings note', 'Upgrade to Starter to use Enforce.', await row.textContent());
+	record('trial ended: pricing link', 1, await row.locator('a[href="https://ipscanner.io/pricing"]').count());
+	await row.screenshot({ path: `${SHOTS}/trial-ended-mode.png` });
+	await Promise.all([page.waitForURL(/settings-updated/), page.click('#submit')]);
+	record('trial ended: saving keeps monitor', 'monitor', settings().mode);
+	record('trial ended: saving keeps enforce remembered', '1', optionOf('ipscanner_enforce_paused'));
 	await ctx.close();
 }
-for (const [label, mode] of [['enforce', 'enforce'], ['no mode field', undefined]]) {
-	planMode = mode;
-	reset();
+planMode = 'enforce';
+wp('transient', 'delete', '--all');
+{
 	const r = await visit('tor');
-	record(`plan ${label}: tor blocked`, 403, r.status);
+	record('upgrade: tor blocked again', 403, r.status);
+	await r.ctx.close();
+	record('upgrade: local mode back to enforce', 'enforce', settings().mode);
+	record('upgrade: nothing remembered', 'false', optionOf('ipscanner_enforce_paused'));
+	const { ctx, page } = await adminContext();
+	await page.goto('/wp-admin/options-general.php?page=ipscanner&tab=settings');
+	record('upgrade: enforce selectable', false, await page.locator('input[value="enforce"]').isDisabled());
+	record('upgrade: no plan note', 0, await page.locator('a[href="https://ipscanner.io/pricing"]').count());
+	await ctx.close();
+}
+planMode = undefined;
+reset();
+{
+	const r = await visit('tor');
+	record('answer without mode: tor blocked', 403, r.status);
 	await r.ctx.close();
 }
+// The settings screen learns the mode from the usage summary before any visitor comes.
+setSettings({ mode: 'enforce' });
+reset();
+usageBody = { plan: 'Free', used: 0, limit: 1000, edgeMode: 'enforce', trialEndsAt: '2026-10-24T00:00:00Z' };
 {
 	const { ctx, page } = await adminContext();
 	await page.goto('/wp-admin/options-general.php?page=ipscanner&tab=settings');
-	record('plan enforce: no settings note', 0, await page.locator('a[href="https://ipscanner.io/pricing"]').count());
+	const row = page.locator('tr', { has: page.locator('input[value="enforce"]') });
+	record('on trial: note with the end date', 'Your Starter trial ends on October 24, 2026.', await row.textContent());
+	record('on trial: enforce selectable', false, await row.locator('input[value="enforce"]').isDisabled());
+	await row.screenshot({ path: `${SHOTS}/trial-active-mode.png` });
+	usageBody = { plan: 'Free', used: 0, limit: 1000, edgeMode: 'monitor', trialEndsAt: null };
+	wp('transient', 'delete', 'ipscanner_usage');
+	await page.goto('/wp-admin/options-general.php?page=ipscanner&tab=settings');
+	record('usage says monitor: enforce disabled', true, await row.locator('input[value="enforce"]').isDisabled());
+	record('usage says monitor: local mode switched', 'monitor', settings().mode);
 	await ctx.close();
 }
+usageBody = { plan: 'Free', used: 0, limit: 1000 };
+reset();
+setSettings({ mode: 'enforce' });
 wp('config', 'set', 'IPSCANNER_API_BASE', realBase);
 plan.close();
 

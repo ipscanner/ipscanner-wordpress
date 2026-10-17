@@ -69,6 +69,7 @@ final class IPScanner_Admin {
 		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue' ) );
 		add_action( 'admin_post_ipscanner_test', array( $this, 'handle_test' ) );
 		add_action( 'admin_post_ipscanner_clear_log', array( $this, 'handle_clear_log' ) );
+		add_action( 'admin_post_ipscanner_test_visit', array( $this, 'handle_test_visit' ) );
 		add_action( 'admin_post_ipscanner_onboard_key', array( $this, 'handle_onboard_key' ) );
 		add_action( 'admin_post_ipscanner_onboard_areas', array( $this, 'handle_onboard_areas' ) );
 		add_action( 'admin_post_ipscanner_onboard_dismiss', array( $this, 'handle_onboard_dismiss' ) );
@@ -561,10 +562,17 @@ final class IPScanner_Admin {
 
 		<h2><?php esc_html_e( 'Recent decisions', 'ipscanner-bot-blocker' ); ?></h2>
 		<?php $this->render_log( array_slice( IPScanner_Log::all(), 0, self::LOG_ROWS ) ); ?>
+		<form method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>" id="ipscanner-test-visit">
+			<input type="hidden" name="action" value="ipscanner_test_visit">
+			<?php wp_nonce_field( 'ipscanner_test_visit' ); ?>
+		</form>
 		<form method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>">
 			<input type="hidden" name="action" value="ipscanner_clear_log">
 			<?php wp_nonce_field( 'ipscanner_clear_log' ); ?>
-			<p><?php submit_button( __( 'Clear', 'ipscanner-bot-blocker' ), 'secondary', 'ipscanner_clear', false ); ?></p>
+			<p>
+				<button type="submit" form="ipscanner-test-visit" class="button button-primary"><?php esc_html_e( 'Send a test visit', 'ipscanner-bot-blocker' ); ?></button>
+				<?php submit_button( __( 'Clear', 'ipscanner-bot-blocker' ), 'secondary', 'ipscanner_clear', false ); ?>
+			</p>
 		</form>
 		<?php
 	}
@@ -824,7 +832,7 @@ final class IPScanner_Admin {
 			echo '<p class="ipscanner-muted">' . esc_html__( 'No decisions yet.', 'ipscanner-bot-blocker' ) . '</p>';
 			return;
 		}
-		$areas     = $this->area_labels();
+		$areas     = $this->area_labels() + array( 'test' => __( 'Test visit', 'ipscanner-bot-blocker' ) );
 		$decisions = $this->decision_labels();
 		$statuses  = array(
 			'timeout'   => __( 'API timeout, allowed', 'ipscanner-bot-blocker' ),
@@ -1082,6 +1090,37 @@ final class IPScanner_Admin {
 		$this->require_cap();
 		check_admin_referer( 'ipscanner_clear_log' );
 		IPScanner_Log::clear();
+		wp_safe_redirect( $this->page_url() );
+		exit;
+	}
+
+	/**
+	 * Checks a sample bot with the current settings and shows what happened to it.
+	 */
+	public function handle_test_visit() {
+		$this->require_cap();
+		check_admin_referer( 'ipscanner_test_visit' );
+		$guard  = new IPScanner_Guard( $this->settings, $this->api );
+		$result = '' === $this->settings->api_key() ? array( 'status' => 'no_key' ) : $guard->test_visit();
+		$texts  = array(
+			'block'       => __( 'Test visit from a bot: blocked.', 'ipscanner-bot-blocker' ),
+			'would_block' => __( 'Test visit from a bot: would be blocked (Monitor mode).', 'ipscanner-bot-blocker' ),
+			'flag'        => __( 'Test visit from a bot: flagged.', 'ipscanner-bot-blocker' ),
+			'would_flag'  => __( 'Test visit from a bot: would be flagged (Monitor mode).', 'ipscanner-bot-blocker' ),
+			'allow'       => __( 'Test visit from a bot: allowed.', 'ipscanner-bot-blocker' ),
+		);
+		if ( 'ok' === $result['status'] && isset( $texts[ $result['decision'] ] ) ) {
+			$line = array(
+				'ok'   => true,
+				'text' => $texts[ $result['decision'] ],
+			);
+		} else {
+			$line = array(
+				'ok'   => false,
+				'text' => __( 'The test visit failed: no answer from the IPScanner API.', 'ipscanner-bot-blocker' ),
+			);
+		}
+		$this->queue_notices( array( $line ) );
 		wp_safe_redirect( $this->page_url() );
 		exit;
 	}

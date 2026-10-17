@@ -617,6 +617,29 @@ if (process.env.API_STOP) {
 	await r.ctx.close();
 }
 
+// 13. Test visit: the Overview button checks a sample bot with the current settings.
+setSettings({ site_id: '', mode: 'enforce', block_classes: ['malicious_automation'], areas: ['site', 'login'], timeout: 3 });
+reset();
+{
+	const { ctx, page } = await adminContext();
+	await page.goto('/wp-admin/options-general.php?page=ipscanner');
+	await Promise.all([page.waitForURL(/page=ipscanner/), page.click('button[form="ipscanner-test-visit"]')]);
+	record('test visit: enforce notice', 'Test visit from a bot: blocked.', await page.locator('.notice').first().textContent());
+	record('test visit: logged as a test visit', 'Test visit', await page.locator('.ipscanner-log tbody tr').first().textContent());
+	record('test visit: logged decision', 'block', log()[0]?.decision);
+	record('test visit: not in the 24 hour totals', true, wp('eval', 'echo IPScanner_Stats::last_day()["checked"];') === '0');
+	await page.setViewportSize({ width: 1280, height: 900 });
+	await page.screenshot({ path: `${SHOTS}/test-visit-enforce.png` });
+	setSettings({ mode: 'monitor' });
+	wp('transient', 'delete', '--all');
+	await page.goto('/wp-admin/options-general.php?page=ipscanner');
+	await Promise.all([page.waitForURL(/page=ipscanner/), page.click('button[form="ipscanner-test-visit"]')]);
+	record('test visit: monitor notice', 'would be blocked (Monitor mode)', await page.locator('.notice').first().textContent());
+	await ctx.close();
+}
+setSettings({ mode: 'enforce' });
+reset();
+
 // Dashboard widget screenshot.
 {
 	const { ctx, page } = await adminContext();

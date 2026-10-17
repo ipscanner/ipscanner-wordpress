@@ -12,6 +12,9 @@ defined( 'ABSPATH' ) || exit;
  */
 final class IPScanner_Guard {
 
+	const TEST_IP = '5.9.0.1';
+	const TEST_UA = 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/141.0.0.0 Safari/537.36';
+
 	/**
 	 * Settings.
 	 *
@@ -148,7 +151,31 @@ final class IPScanner_Guard {
 		}
 
 		$user_agent = isset( $_SERVER['HTTP_USER_AGENT'] ) ? substr( sanitize_text_field( wp_unslash( $_SERVER['HTTP_USER_AGENT'] ) ), 0, 512 ) : '';
-		$outcome    = $this->api->edge_check( $ip, $user_agent, IPScanner_Request::forwarded_headers( $server ) );
+		return $this->decide( $ip, $user_agent, IPScanner_Request::forwarded_headers( $server ), $area, $path );
+	}
+
+	/**
+	 * Checks a sample bot (a headless browser on a data center network) with
+	 * the current settings, for the Overview's test visit.
+	 *
+	 * @return array class, action, decision and status.
+	 */
+	public function test_visit() {
+		return $this->decide( self::TEST_IP, self::TEST_UA, array(), 'test', '/' );
+	}
+
+	/**
+	 * Calls the edge check, applies the policy and logs the decision.
+	 *
+	 * @param string $ip         Visitor address.
+	 * @param string $user_agent Visitor user agent.
+	 * @param array  $headers    Forwarded headers.
+	 * @param string $area       Protected area.
+	 * @param string $path       Request path.
+	 * @return array
+	 */
+	private function decide( $ip, $user_agent, array $headers, $area, $path ) {
+		$outcome = $this->api->edge_check( $ip, $user_agent, $headers );
 
 		if ( ! $outcome['ok'] ) {
 			if ( 'backoff' !== $outcome['status'] ) {
@@ -205,7 +232,9 @@ final class IPScanner_Guard {
 					'decision' => $result['decision'],
 				)
 			);
-			IPScanner_Stats::add( $result['class'], $result['decision'] );
+			if ( 'test' !== $area ) {
+				IPScanner_Stats::add( $result['class'], $result['decision'] );
+			}
 		}
 		return $result;
 	}

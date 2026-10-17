@@ -227,4 +227,56 @@ final class GuardTest extends TestCase {
 		update_option( IPScanner_API::EDGE_MODE, 'enforce' );
 		$this->assertSame( 'enforce', IPScanner_Settings::sanitize( array( 'mode' => 'enforce' ) )['mode'] );
 	}
+
+	private function bot_edge( array $extra = array() ) {
+		IPScanner_Test_WP::respond(
+			'/v1/edge/check',
+			array_merge(
+				array(
+					'class'   => 'malicious_automation',
+					'network' => array( 'networkClass' => 'datacenter' ),
+				),
+				$extra
+			)
+		);
+	}
+
+	private function sent_body() {
+		return json_decode( IPScanner_Test_WP::$requests[0]['args']['body'], true );
+	}
+
+	public function test_test_visit_checks_a_sample_bot_and_blocks_it_in_enforce() {
+		$this->bot_edge( array( 'mode' => 'enforce' ) );
+		$guard = $this->guard( array( 'block_classes' => array( 'malicious_automation' ) ) );
+		$this->assertSame( 'block', $guard->test_visit()['decision'] );
+		$this->assertSame( IPScanner_Guard::TEST_IP, $this->sent_body()['ip'] );
+		$this->assertStringContainsString( 'HeadlessChrome', $this->sent_body()['user_agent'] );
+		$entry = IPScanner_Log::all()[0];
+		$this->assertSame( 'test', $entry['area'] );
+		$this->assertSame( 'block', $entry['decision'] );
+		$this->assertSame( 0, IPScanner_Stats::last_day()['checked'] );
+	}
+
+	public function test_test_visit_would_block_in_monitor() {
+		$this->bot_edge( array( 'mode' => 'monitor' ) );
+		$guard = $this->guard( array( 'block_classes' => array( 'malicious_automation' ) ) );
+		$this->assertSame( 'would_block', $guard->test_visit()['decision'] );
+	}
+
+	public function test_test_visit_ignores_the_allowlist() {
+		$this->bot_edge( array( 'mode' => 'enforce' ) );
+		$guard = $this->guard(
+			array(
+				'block_classes' => array( 'malicious_automation' ),
+				'allowlist'     => IPScanner_Guard::TEST_IP,
+			)
+		);
+		$this->assertSame( 'block', $guard->test_visit()['decision'] );
+	}
+
+	public function test_test_visit_reports_a_failed_call() {
+		$guard = $this->guard();
+		$this->assertSame( 'allow', $guard->test_visit()['decision'] );
+		$this->assertNotSame( 'ok', $guard->test_visit()['status'] );
+	}
 }

@@ -73,7 +73,7 @@ No. Visitors never solve a puzzle. The check runs on your server when a form is 
 
 = Do I need an account? =
 
-Yes. Connect with IPScanner creates a free one in a few clicks, or signs you in to an existing one. Any plan works. On the Free plan, sites managed from the dashboard run in monitor mode.
+Yes. Connect with IPScanner creates a free one in a few clicks, or signs you in to an existing one. Any plan works. The Free plan includes 30,000 requests a month (up to 1,000 a day, about 500 new visitors a day) with no card, and runs sites in monitor mode. Blocking starts on Starter, $19 a month.
 
 = Will it block Google or Bing? =
 

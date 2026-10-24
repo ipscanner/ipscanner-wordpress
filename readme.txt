@@ -44,7 +44,7 @@ Forms get an error message. Pages get a short 403 page.
 
 **What it costs**
 
-Each new visitor check uses 2 requests from your IPScanner allowance. A visitor is checked at most once every 10 minutes. The whole front end check skips static files, the admin area, AJAX, cron and REST requests. Logins, forms and checkout are still checked when they are sent that way, including the WooCommerce block checkout (Store API).
+Each new visitor check uses 2 requests from your IPScanner allowance. The Free plan includes 30,000 requests a month, no card needed, and runs sites in monitor mode. Blocking (enforce mode) starts on the Starter plan, $19 a month. Plans: https://ipscanner.io/pricing A visitor is checked at most once every 10 minutes. The whole front end check skips static files, the admin area, AJAX, cron and REST requests. Logins, forms and checkout are still checked when they are sent that way, including the WooCommerce block checkout (Store API).
 
 **Fail open**
 

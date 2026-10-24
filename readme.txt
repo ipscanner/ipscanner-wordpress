@@ -61,7 +61,7 @@ Choose Cloudflare or X-Forwarded-For under Visitor IP. Proxy headers are only re
 3. Choose what to protect.
 4. Leave the mode on Monitor for a few days, check the Overview tab, then switch to Enforce.
 
-You can also paste an API key from [ipscanner.io](https://ipscanner.io/dashboard/apikeys) instead of connecting.
+You can also paste an API key from [ipscanner.io](https://ipscanner.io/signup?next=%2Fdashboard%2Fapikeys) (free plan, no card) instead of connecting.
 
 The key can also be set in wp-config.php with `define( 'IPSCANNER_API_KEY', 'pk_live_...' );`.
 

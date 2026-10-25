@@ -2,14 +2,14 @@
 # This file is distributed under the GPLv2 or later.
 msgid ""
 msgstr ""
-"Project-Id-Version: IPScanner – Block Bots, VPNs & Proxies 0.2.2\n"
+"Project-Id-Version: IPScanner – Block Bots, VPNs & Proxies 0.2.3\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/ipscanner-bot-blocker\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-10-17T07:28:20+00:00\n"
+"POT-Creation-Date: 2026-10-25T09:28:55+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: ipscanner-bot-blocker\n"
@@ -149,7 +149,7 @@ msgstr ""
 #. translators: %s: link to the pricing page
 #: includes/class-ipscanner-admin.php:307
 #, php-format
-msgid "Your trial has ended, so nothing is blocked. %s to use Enforce."
+msgid "Your trial has ended, so nothing is blocked. %s to block again."
 msgstr ""
 
 #: includes/class-ipscanner-admin.php:308
@@ -240,7 +240,7 @@ msgstr ""
 
 #: includes/class-ipscanner-admin.php:527
 #: includes/class-ipscanner-admin.php:1156
-msgid "Enforce mode"
+msgid "Block mode"
 msgstr ""
 
 #: includes/class-ipscanner-admin.php:527
@@ -369,7 +369,7 @@ msgid "Monitor: record decisions, block nothing"
 msgstr ""
 
 #: includes/class-ipscanner-admin.php:713
-msgid "Enforce: block the classes selected below"
+msgid "Block: stop the classes selected below"
 msgstr ""
 
 #: includes/class-ipscanner-admin.php:722
@@ -557,7 +557,7 @@ msgid "Site %s was not found on this account."
 msgstr ""
 
 #: includes/class-ipscanner-admin.php:1044
-msgid "Saved. Enforce mode is on."
+msgid "Saved. Block mode is on."
 msgstr ""
 
 #: includes/class-ipscanner-admin.php:1045

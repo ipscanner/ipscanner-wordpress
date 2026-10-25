@@ -3,7 +3,7 @@
  * Plugin Name:       IPScanner – Block Bots, VPNs & Proxies
  * Plugin URI:        https://wordpress.org/plugins/ipscanner-bot-blocker/
  * Description:       Checks visitors with IPScanner and blocks bots, Tor, VPN and proxy traffic on your site, login, registration, comments and checkout.
- * Version:           0.2.2
+ * Version:           0.2.3
  * Requires at least: 6.0
  * Requires PHP:      7.4
  * Author:            IPScanner
@@ -18,7 +18,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
-define( 'IPSCANNER_VERSION', '0.2.2' );
+define( 'IPSCANNER_VERSION', '0.2.3' );
 define( 'IPSCANNER_FILE', __FILE__ );
 define( 'IPSCANNER_DIR', plugin_dir_path( __FILE__ ) );
 

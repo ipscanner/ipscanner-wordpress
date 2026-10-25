@@ -68,3 +68,21 @@
 		timer = window.setInterval( poll, 2000 );
 	} );
 }() );
+
+( function () {
+	'use strict';
+
+	var notice = document.querySelector( '.ipscanner-review' );
+	if ( ! notice ) {
+		return;
+	}
+	notice.addEventListener( 'click', function ( event ) {
+		if ( event.target.closest( '[data-ipscanner-review]' ) ) {
+			window.setTimeout( function () {
+				notice.remove();
+			}, 0 );
+		} else if ( event.target.closest( '.notice-dismiss' ) && window.fetch ) {
+			window.fetch( notice.getAttribute( 'data-later' ), { credentials: 'same-origin' } ).catch( function () {} );
+		}
+	} );
+}() );

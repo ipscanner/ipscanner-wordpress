@@ -12,8 +12,9 @@ defined( 'ABSPATH' ) || exit;
  */
 final class IPScanner_Stats {
 
-	const OPTION = 'ipscanner_stats';
-	const HOURS  = 24;
+	const OPTION  = 'ipscanner_stats';
+	const FLAGGED = 'ipscanner_flagged_total';
+	const HOURS   = 24;
 
 	/**
 	 * Adds one checked visitor to the buckets and drops buckets older than a day.
@@ -121,7 +122,26 @@ final class IPScanner_Stats {
 	 * @param string $decision      Decision.
 	 */
 	public static function add( $traffic_class, $decision ) {
+		$flagged = self::flagged_total();
 		update_option( self::OPTION, self::bump( self::buckets(), time(), $traffic_class, $decision ), false );
+		if ( 'block' === $decision || 'would_block' === $decision ) {
+			update_option( self::FLAGGED, $flagged + 1, false );
+		}
+	}
+
+	/**
+	 * Visitors blocked or that monitor mode would block, all time. Until the
+	 * counter has its first entry, the last 24 hours.
+	 *
+	 * @return int
+	 */
+	public static function flagged_total() {
+		$total = get_option( self::FLAGGED, null );
+		if ( null === $total ) {
+			$day = self::last_day();
+			return $day['blocked'] + $day['would'];
+		}
+		return (int) $total;
 	}
 
 	/**

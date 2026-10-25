@@ -2,6 +2,8 @@
 
 use PHPUnit\Framework\TestCase;
 
+require_once __DIR__ . '/../wp-stubs.php';
+
 final class StatsTest extends TestCase {
 
 	const NOW = 1760000000;
@@ -71,5 +73,26 @@ final class StatsTest extends TestCase {
 		$b = IPScanner_Stats::bump( $b, self::NOW, 'human', 'allow' );
 		$this->assertCount( 1, $b );
 		$this->assertSame( 1, IPScanner_Stats::totals( $b, self::NOW )['checked'] );
+	}
+
+	public function test_flagged_total_counts_blocks_and_would_blocks_for_good() {
+		IPScanner_Test_WP::reset();
+		IPScanner_Stats::add( 'tor', 'block' );
+		IPScanner_Stats::add( 'vpn', 'would_block' );
+		IPScanner_Stats::add( 'vpn', 'would_flag' );
+		IPScanner_Stats::add( 'human', 'allow' );
+		$this->assertSame( 2, IPScanner_Stats::flagged_total() );
+		IPScanner_Test_WP::$options[ IPScanner_Stats::OPTION ] = array();
+		$this->assertSame( 2, IPScanner_Stats::flagged_total() );
+	}
+
+	public function test_flagged_total_starts_from_the_last_day() {
+		IPScanner_Test_WP::reset();
+		$b = IPScanner_Stats::bump( array(), time(), 'tor', 'block' );
+		$b = IPScanner_Stats::bump( $b, time(), 'vpn', 'would_block' );
+		IPScanner_Test_WP::$options[ IPScanner_Stats::OPTION ] = $b;
+		$this->assertSame( 2, IPScanner_Stats::flagged_total() );
+		IPScanner_Stats::add( 'tor', 'block' );
+		$this->assertSame( 3, IPScanner_Stats::flagged_total() );
 	}
 }

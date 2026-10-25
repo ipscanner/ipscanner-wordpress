@@ -455,3 +455,9 @@
 		white-space: nowrap;
 	}
 }
+
+.ipscanner-review-actions {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 8px;
+}

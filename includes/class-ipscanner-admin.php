@@ -20,6 +20,10 @@ final class IPScanner_Admin {
 	const ONBOARDING    = 'ipscanner_onboarding';
 	const USAGE         = 'ipscanner_usage';
 	const LOG_ROWS      = 10;
+	const INSTALLED     = 'ipscanner_installed_at';
+	const REVIEW        = 'ipscanner_review';
+	const REVIEW_URL    = 'https://wordpress.org/support/plugin/ipscanner-bot-blocker/reviews/#new-post';
+	const REVIEW_MIN    = 25;
 
 	/**
 	 * Areas offered in the onboarding card.
@@ -65,6 +69,7 @@ final class IPScanner_Admin {
 	 */
 	public function register() {
 		add_action( 'admin_init', array( $this, 'register_setting' ) );
+		add_action( 'admin_init', array( $this, 'mark_installed' ) );
 		add_action( 'admin_menu', array( $this, 'add_page' ) );
 		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue' ) );
 		add_action( 'admin_post_ipscanner_test', array( $this, 'handle_test' ) );
@@ -73,6 +78,8 @@ final class IPScanner_Admin {
 		add_action( 'admin_post_ipscanner_onboard_key', array( $this, 'handle_onboard_key' ) );
 		add_action( 'admin_post_ipscanner_onboard_areas', array( $this, 'handle_onboard_areas' ) );
 		add_action( 'admin_post_ipscanner_onboard_dismiss', array( $this, 'handle_onboard_dismiss' ) );
+		add_action( 'admin_post_ipscanner_review', array( $this, 'handle_review' ) );
+		add_action( 'wp_ajax_ipscanner_review', array( $this, 'handle_review' ) );
 		add_action( 'wp_dashboard_setup', array( $this, 'add_widget' ) );
 		add_action( 'admin_notices', array( $this, 'notices' ) );
 		add_filter( 'plugin_action_links_' . plugin_basename( IPSCANNER_FILE ), array( $this, 'action_links' ) );
@@ -91,6 +98,15 @@ final class IPScanner_Admin {
 				'default'           => IPScanner_Settings::defaults(),
 			)
 		);
+	}
+
+	/**
+	 * Remembers when an administrator first saw the plugin, for the review notice.
+	 */
+	public function mark_installed() {
+		if ( false === get_option( self::INSTALLED ) ) {
+			update_option( self::INSTALLED, time() );
+		}
 	}
 
 	/**
@@ -1126,6 +1142,103 @@ final class IPScanner_Admin {
 	}
 
 	/**
+	 * Review notice buttons: review and done hide it for good, later for 60 days.
+	 * The X on the notice sends later over AJAX.
+	 */
+	public function handle_review() {
+		$this->require_cap();
+		if ( wp_doing_ajax() ) {
+			check_ajax_referer( 'ipscanner_review' );
+		} else {
+			check_admin_referer( 'ipscanner_review' );
+		}
+		$choice = isset( $_GET['choice'] ) ? sanitize_key( wp_unslash( $_GET['choice'] ) ) : '';
+		$events = array(
+			'review' => 'wp_review_clicked',
+			'done'   => 'wp_review_done',
+			'later'  => 'wp_review_later',
+		);
+		if ( isset( $events[ $choice ] ) ) {
+			$state = 'later' === $choice ? array( 'until' => time() + 60 * DAY_IN_SECONDS ) : array( 'done' => time() );
+			update_option( self::REVIEW, $state, false );
+			$props = array( 'flagged' => IPScanner_Stats::flagged_total() );
+			if ( 'later' === $choice ) {
+				$props['via'] = wp_doing_ajax() ? 'dismiss' : 'button';
+			}
+			$this->telemetry->send( $events[ $choice ], $props );
+		}
+		if ( wp_doing_ajax() ) {
+			wp_send_json_success();
+		}
+		if ( 'review' === $choice ) {
+			wp_redirect( self::REVIEW_URL ); // phpcs:ignore WordPress.Security.SafeRedirect.wp_redirect_wp_redirect -- Fixed wordpress.org URL.
+			exit;
+		}
+		$back = wp_get_referer();
+		wp_safe_redirect( $back ? $back : $this->page_url() );
+		exit;
+	}
+
+	/**
+	 * Whether to ask for a review: connected, first seen 3 days ago or more,
+	 * 25 or more visitors blocked or flagged, not done and not snoozed.
+	 *
+	 * @param int $flagged Visitors blocked or flagged so far.
+	 * @return bool
+	 */
+	private function review_due( $flagged ) {
+		if ( '' === $this->settings->api_key() || $flagged < self::REVIEW_MIN ) {
+			return false;
+		}
+		$state = get_option( self::REVIEW, array() );
+		$state = is_array( $state ) ? $state : array();
+		if ( ! empty( $state['done'] ) || ( ! empty( $state['until'] ) && time() < (int) $state['until'] ) ) {
+			return false;
+		}
+		$installed = (int) get_option( self::INSTALLED, 0 );
+		return $installed > 0 && time() - $installed >= 3 * DAY_IN_SECONDS;
+	}
+
+	/**
+	 * The review notice, on the plugin page only.
+	 */
+	private function review_notice() {
+		$flagged = IPScanner_Stats::flagged_total();
+		if ( ! $this->review_due( $flagged ) ) {
+			return;
+		}
+		$state = get_option( self::REVIEW, array() );
+		if ( ! is_array( $state ) || empty( $state['shown'] ) ) {
+			update_option( self::REVIEW, array( 'shown' => time() ), false );
+			$this->telemetry->send( 'wp_review_notice_shown', array( 'flagged' => $flagged ) );
+		}
+		$url = function ( $base, $choice ) {
+			$args = array(
+				'action' => 'ipscanner_review',
+				'choice' => $choice,
+			);
+			return wp_nonce_url( add_query_arg( $args, admin_url( $base ) ), 'ipscanner_review' );
+		};
+		/* translators: %s: number of visitors blocked or flagged */
+		$text = _n(
+			'IPScanner has flagged %s automated bot or risky IP on your site so far. If it\'s saving you headaches, would you mind leaving a quick review on WordPress.org? It helps other site owners find us.',
+			'IPScanner has flagged %s automated bots and risky IPs on your site so far. If it\'s saving you headaches, would you mind leaving a quick review on WordPress.org? It helps other site owners find us.',
+			$flagged,
+			'ipscanner-bot-blocker'
+		);
+		?>
+		<div class="notice notice-info is-dismissible ipscanner-review" data-later="<?php echo esc_url( $url( 'admin-ajax.php', 'later' ) ); ?>">
+			<p><?php echo esc_html( sprintf( $text, number_format_i18n( $flagged ) ) ); ?></p>
+			<p class="ipscanner-review-actions">
+				<a class="button button-primary" href="<?php echo esc_url( $url( 'admin-post.php', 'review' ) ); ?>" target="_blank" rel="noopener" data-ipscanner-review><?php esc_html_e( 'Leave a review on WordPress.org', 'ipscanner-bot-blocker' ); ?></a>
+				<a class="button" href="<?php echo esc_url( $url( 'admin-post.php', 'done' ) ); ?>"><?php esc_html_e( 'I already did', 'ipscanner-bot-blocker' ); ?></a>
+				<a class="button" href="<?php echo esc_url( $url( 'admin-post.php', 'later' ) ); ?>"><?php esc_html_e( 'Maybe later', 'ipscanner-bot-blocker' ); ?></a>
+			</p>
+		</div>
+		<?php
+	}
+
+	/**
 	 * Adds the dashboard widget for administrators.
 	 */
 	public function add_widget() {
@@ -1174,8 +1287,8 @@ final class IPScanner_Admin {
 	}
 
 	/**
-	 * Missing key notice on the plugins screen, and a rejected key or used up
-	 * allowance on the dashboard. Both go away once resolved.
+	 * Missing key notice on the plugins screen, a rejected key or used up
+	 * allowance on the dashboard, and the review notice on the plugin page.
 	 */
 	public function notices() {
 		if ( ! current_user_can( 'manage_options' ) ) {
@@ -1183,6 +1296,10 @@ final class IPScanner_Admin {
 		}
 		$screen = get_current_screen();
 		if ( ! $screen ) {
+			return;
+		}
+		if ( 'settings_page_' . self::PAGE === $screen->id ) {
+			$this->review_notice();
 			return;
 		}
 		if ( '' === $this->settings->api_key() ) {

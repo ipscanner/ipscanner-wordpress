@@ -304,7 +304,7 @@ final class IPScanner_Admin {
 		$ends = is_array( $usage ) && $usage['ok'] && ! empty( $usage['data']['trialEndsAt'] ) ? strtotime( (string) $usage['data']['trialEndsAt'] ) : false;
 		if ( IPScanner_API::edge_monitor() ) {
 			/* translators: %s: link to the pricing page */
-			$text = esc_html__( 'Your trial has ended, so nothing is blocked. %s to use Enforce.', 'ipscanner-bot-blocker' );
+			$text = esc_html__( 'Your trial has ended, so nothing is blocked. %s to block again.', 'ipscanner-bot-blocker' );
 			$link = esc_html__( 'Upgrade to Starter', 'ipscanner-bot-blocker' );
 		} elseif ( $ends ) {
 			/* translators: 1: date the trial ends, 2: link to the pricing page */
@@ -524,7 +524,7 @@ final class IPScanner_Admin {
 			<?php $this->render_status( $usage ); ?>
 			<p class="ipscanner-status-mode">
 				<?php
-				echo esc_html( $enforce ? __( 'Enforce mode', 'ipscanner-bot-blocker' ) : __( 'Monitor mode', 'ipscanner-bot-blocker' ) );
+				echo esc_html( $enforce ? __( 'Block mode', 'ipscanner-bot-blocker' ) : __( 'Monitor mode', 'ipscanner-bot-blocker' ) );
 				if ( '' !== $site ) {
 					printf(
 						' <a href="%1$s" target="_blank" rel="noopener">%2$s</a>',
@@ -710,7 +710,7 @@ final class IPScanner_Admin {
 					<td>
 						<fieldset>
 							<label><input type="radio" name="<?php echo esc_attr( $name ); ?>[mode]" value="monitor" <?php checked( $s['mode'], 'monitor' ); ?>> <?php esc_html_e( 'Monitor: record decisions, block nothing', 'ipscanner-bot-blocker' ); ?></label><br>
-							<label<?php echo $locked ? ' class="ipscanner-muted"' : ''; ?>><input type="radio" name="<?php echo esc_attr( $name ); ?>[mode]" value="enforce" <?php checked( $s['mode'], 'enforce' ); ?> <?php disabled( $locked ); ?>> <?php esc_html_e( 'Enforce: block the classes selected below', 'ipscanner-bot-blocker' ); ?></label>
+							<label<?php echo $locked ? ' class="ipscanner-muted"' : ''; ?>><input type="radio" name="<?php echo esc_attr( $name ); ?>[mode]" value="enforce" <?php checked( $s['mode'], 'enforce' ); ?> <?php disabled( $locked ); ?>> <?php esc_html_e( 'Block: stop the classes selected below', 'ipscanner-bot-blocker' ); ?></label>
 							<?php if ( $locked ) : ?>
 								<span class="ipscanner-chip">Starter</span>
 							<?php endif; ?>
@@ -1041,7 +1041,7 @@ final class IPScanner_Admin {
 				array(
 					'ok'   => true,
 					'text' => IPScanner_Policy::MODE_ENFORCE === $this->mode()
-						? __( 'Saved. Enforce mode is on.', 'ipscanner-bot-blocker' )
+						? __( 'Saved. Block mode is on.', 'ipscanner-bot-blocker' )
 						: __( 'Saved. Monitor mode is on: decisions are recorded, nothing is blocked.', 'ipscanner-bot-blocker' ),
 				),
 			)
@@ -1153,7 +1153,7 @@ final class IPScanner_Admin {
 		?>
 		<div class="ipscanner-widget">
 			<?php $this->render_status( $this->usage( false ) ); ?>
-			<p class="ipscanner-status-mode"><?php echo esc_html( $enforce ? __( 'Enforce mode', 'ipscanner-bot-blocker' ) : __( 'Monitor mode', 'ipscanner-bot-blocker' ) ); ?></p>
+			<p class="ipscanner-status-mode"><?php echo esc_html( $enforce ? __( 'Block mode', 'ipscanner-bot-blocker' ) : __( 'Monitor mode', 'ipscanner-bot-blocker' ) ); ?></p>
 			<div class="ipscanner-numbers">
 				<div class="ipscanner-number">
 					<span class="ipscanner-number-value"><?php echo esc_html( number_format_i18n( $totals['checked'] ) ); ?></span>

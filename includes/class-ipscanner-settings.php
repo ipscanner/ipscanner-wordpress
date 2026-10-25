@@ -32,9 +32,9 @@ final class IPScanner_Settings {
 		return array(
 			'api_key'         => '',
 			'site_id'         => '',
-			'mode'            => IPScanner_Policy::MODE_MONITOR,
+			'mode'            => IPScanner_Policy::MODE_ENFORCE,
 			'areas'           => array( 'login', 'register', 'lostpassword', 'comments', 'woo_checkout', 'woo_register', 'forms' ),
-			'block_classes'   => array( 'malicious_automation' ),
+			'block_classes'   => array( 'malicious_automation', 'tor' ),
 			'allowlist'       => '',
 			'allow_admins'    => true,
 			'ip_source'       => IPScanner_Request::SOURCE_REMOTE_ADDR,

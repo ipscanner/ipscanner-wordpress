@@ -8,7 +8,7 @@
     "build": "sh bin/build-zip.sh"
   },
   "devDependencies": {
-    "@wordpress/env": "^11.17.0",
+    "@wordpress/env": "^12.0.0",
     "playwright": "1.64.1"
   }
 }

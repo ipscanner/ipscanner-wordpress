@@ -32,10 +32,6 @@ IPScanner checks each visitor on your server and stops bots before they reach yo
 
 Verified search engines and AI crawlers always pass. If the API is slow or down, visitors are let in.
 
-**Pricing**
-
-New accounts get 7 days of Starter from the first check. After that the Free plan keeps 30,000 requests a month in monitor mode, and blocking is on Starter, $19 a month. [See plans](https://ipscanner.io/pricing)
-
 == Installation ==
 
 1. Install and activate the plugin.

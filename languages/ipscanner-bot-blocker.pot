@@ -2,14 +2,14 @@
 # This file is distributed under the GPLv2 or later.
 msgid ""
 msgstr ""
-"Project-Id-Version: IPScanner – Block Bots, VPNs & Proxies 0.2.4\n"
+"Project-Id-Version: IPScanner – Block Bots, VPNs & Proxies 0.2.5\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/ipscanner-bot-blocker\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-10-25T12:26:26+00:00\n"
+"POT-Creation-Date: 2026-10-31T21:27:07+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: ipscanner-bot-blocker\n"
@@ -31,7 +31,7 @@ msgstr ""
 
 #. Author of the plugin
 #: ipscanner.php
-#: includes/class-ipscanner-admin.php:380
+#: includes/class-ipscanner-admin.php:366
 msgid "IPScanner"
 msgstr ""
 
@@ -45,9 +45,9 @@ msgid "Finish in the IPScanner window…"
 msgstr ""
 
 #: includes/class-ipscanner-admin.php:148
-#: includes/class-ipscanner-admin.php:382
-#: includes/class-ipscanner-admin.php:638
-#: includes/class-ipscanner-admin.php:1329
+#: includes/class-ipscanner-admin.php:368
+#: includes/class-ipscanner-admin.php:624
+#: includes/class-ipscanner-admin.php:1315
 msgid "Settings"
 msgstr ""
 
@@ -56,12 +56,12 @@ msgid "Whole site (front end)"
 msgstr ""
 
 #: includes/class-ipscanner-admin.php:181
-#: includes/class-ipscanner-admin.php:464
+#: includes/class-ipscanner-admin.php:450
 msgid "Login"
 msgstr ""
 
 #: includes/class-ipscanner-admin.php:182
-#: includes/class-ipscanner-admin.php:465
+#: includes/class-ipscanner-admin.php:451
 msgid "Registration"
 msgstr ""
 
@@ -70,7 +70,7 @@ msgid "Password reset"
 msgstr ""
 
 #: includes/class-ipscanner-admin.php:184
-#: includes/class-ipscanner-admin.php:466
+#: includes/class-ipscanner-admin.php:452
 msgid "Comments"
 msgstr ""
 
@@ -131,8 +131,8 @@ msgid "Flagged"
 msgstr ""
 
 #: includes/class-ipscanner-admin.php:233
-#: includes/class-ipscanner-admin.php:571
-#: includes/class-ipscanner-admin.php:1277
+#: includes/class-ipscanner-admin.php:557
+#: includes/class-ipscanner-admin.php:1263
 msgid "Blocked"
 msgstr ""
 
@@ -141,515 +141,509 @@ msgid "Would flag"
 msgstr ""
 
 #: includes/class-ipscanner-admin.php:235
-#: includes/class-ipscanner-admin.php:571
-#: includes/class-ipscanner-admin.php:1277
+#: includes/class-ipscanner-admin.php:557
+#: includes/class-ipscanner-admin.php:1263
 msgid "Would block"
 msgstr ""
 
-#. translators: %s: link to the pricing page
+#. translators: %s: link to claim free credits
+#: includes/class-ipscanner-admin.php:322
+#, php-format
+msgid "Nothing is blocked right now. %s to turn blocking on."
+msgstr ""
+
 #: includes/class-ipscanner-admin.php:323
-#, php-format
-msgid "Your trial has ended, so nothing is blocked. %s to block again."
+msgid "Get 25,000 free credits"
 msgstr ""
 
-#: includes/class-ipscanner-admin.php:324
-msgid "Upgrade to Starter"
-msgstr ""
-
-#. translators: 1: date the trial ends, 2: link to the pricing page
-#: includes/class-ipscanner-admin.php:327
-#, php-format
-msgid "Your Starter trial ends on %1$s. After that, nothing is blocked until you %2$s."
-msgstr ""
-
-#: includes/class-ipscanner-admin.php:328
-msgid "upgrade"
-msgstr ""
-
-#: includes/class-ipscanner-admin.php:381
-#: includes/class-ipscanner-admin.php:1284
+#: includes/class-ipscanner-admin.php:367
+#: includes/class-ipscanner-admin.php:1270
 msgid "Overview"
 msgstr ""
 
-#: includes/class-ipscanner-admin.php:419
+#: includes/class-ipscanner-admin.php:405
 msgid "Connect with IPScanner"
 msgstr ""
 
 #. translators: 1: account email, 2: plan name
-#: includes/class-ipscanner-admin.php:437
+#: includes/class-ipscanner-admin.php:423
 #, php-format
 msgid "Connected as %1$s, %2$s plan"
 msgstr ""
 
 #. translators: %s: account email
-#: includes/class-ipscanner-admin.php:441
+#: includes/class-ipscanner-admin.php:427
 #, php-format
 msgid "Connected as %s"
 msgstr ""
 
 #. translators: %s: plan name
-#: includes/class-ipscanner-admin.php:444
-#: includes/class-ipscanner-admin.php:616
+#: includes/class-ipscanner-admin.php:430
+#: includes/class-ipscanner-admin.php:602
 msgid "Connected"
 msgstr ""
 
 #. translators: %s: plan name
-#: includes/class-ipscanner-admin.php:444
+#: includes/class-ipscanner-admin.php:430
 #, php-format
 msgid "Connected, %s plan"
 msgstr ""
 
-#: includes/class-ipscanner-admin.php:467
+#: includes/class-ipscanner-admin.php:453
 msgid "Checkout"
 msgstr ""
 
-#: includes/class-ipscanner-admin.php:476
+#: includes/class-ipscanner-admin.php:462
 msgid "Protect logins, forms and checkout"
 msgstr ""
 
-#: includes/class-ipscanner-admin.php:481
+#: includes/class-ipscanner-admin.php:467
 msgid "Skip"
 msgstr ""
 
-#: includes/class-ipscanner-admin.php:488
+#: includes/class-ipscanner-admin.php:474
 msgid "Connect your IPScanner account"
 msgstr ""
 
-#: includes/class-ipscanner-admin.php:493
+#: includes/class-ipscanner-admin.php:479
 msgid "Sign up or sign in, free, no credit card."
 msgstr ""
 
-#: includes/class-ipscanner-admin.php:498
+#: includes/class-ipscanner-admin.php:484
 msgid "Use an API key instead"
 msgstr ""
 
-#: includes/class-ipscanner-admin.php:502
-#: includes/class-ipscanner-admin.php:663
+#: includes/class-ipscanner-admin.php:488
+#: includes/class-ipscanner-admin.php:649
 msgid "API key"
 msgstr ""
 
-#: includes/class-ipscanner-admin.php:504
-#: includes/class-ipscanner-admin.php:520
+#: includes/class-ipscanner-admin.php:490
+#: includes/class-ipscanner-admin.php:506
 msgid "Save"
 msgstr ""
 
-#: includes/class-ipscanner-admin.php:511
-#: includes/class-ipscanner-admin.php:516
+#: includes/class-ipscanner-admin.php:497
+#: includes/class-ipscanner-admin.php:502
 msgid "Choose what to protect"
 msgstr ""
 
-#: includes/class-ipscanner-admin.php:543
-#: includes/class-ipscanner-admin.php:1269
+#: includes/class-ipscanner-admin.php:529
+#: includes/class-ipscanner-admin.php:1255
 msgid "Block mode"
 msgstr ""
 
-#: includes/class-ipscanner-admin.php:543
-#: includes/class-ipscanner-admin.php:1269
+#: includes/class-ipscanner-admin.php:529
+#: includes/class-ipscanner-admin.php:1255
 msgid "Monitor mode"
 msgstr ""
 
-#: includes/class-ipscanner-admin.php:548
+#: includes/class-ipscanner-admin.php:534
 msgid "Policy from dashboard"
 msgstr ""
 
-#: includes/class-ipscanner-admin.php:551
+#: includes/class-ipscanner-admin.php:537
 msgid "Change"
 msgstr ""
 
-#: includes/class-ipscanner-admin.php:558
+#: includes/class-ipscanner-admin.php:544
 msgid "Add this site to the IPScanner dashboard for traffic charts"
 msgstr ""
 
-#: includes/class-ipscanner-admin.php:563
+#: includes/class-ipscanner-admin.php:549
 msgid "Last 24 hours"
 msgstr ""
 
-#: includes/class-ipscanner-admin.php:567
+#: includes/class-ipscanner-admin.php:553
 msgid "Checked"
 msgstr ""
 
-#: includes/class-ipscanner-admin.php:575
-#: includes/class-ipscanner-admin.php:1281
+#: includes/class-ipscanner-admin.php:561
+#: includes/class-ipscanner-admin.php:1267
 msgid "Top reason"
 msgstr ""
 
-#: includes/class-ipscanner-admin.php:579
+#: includes/class-ipscanner-admin.php:565
 msgid "Recent decisions"
 msgstr ""
 
-#: includes/class-ipscanner-admin.php:589
+#: includes/class-ipscanner-admin.php:575
 msgid "Send a test visit"
 msgstr ""
 
-#: includes/class-ipscanner-admin.php:590
+#: includes/class-ipscanner-admin.php:576
 msgid "Clear"
 msgstr ""
 
 #. translators: %s: plan name
-#: includes/class-ipscanner-admin.php:628
+#: includes/class-ipscanner-admin.php:614
 #, php-format
 msgid "%s plan"
 msgstr ""
 
 #. translators: %d: percentage of the monthly requests used
-#: includes/class-ipscanner-admin.php:634
+#: includes/class-ipscanner-admin.php:620
 #, php-format
 msgid "%d%% used this month"
 msgstr ""
 
-#: includes/class-ipscanner-admin.php:660
+#: includes/class-ipscanner-admin.php:646
 msgid "Connection"
 msgstr ""
 
-#: includes/class-ipscanner-admin.php:666
+#: includes/class-ipscanner-admin.php:652
 msgid "Set by the IPSCANNER_API_KEY constant."
 msgstr ""
 
-#: includes/class-ipscanner-admin.php:671
+#: includes/class-ipscanner-admin.php:657
 msgid "Disconnect"
 msgstr ""
 
-#: includes/class-ipscanner-admin.php:674
+#: includes/class-ipscanner-admin.php:660
 msgid "Use a different API key"
 msgstr ""
 
 #. translators: %s: last 4 characters of the key
-#: includes/class-ipscanner-admin.php:676
-#: includes/class-ipscanner-admin.php:682
+#: includes/class-ipscanner-admin.php:662
+#: includes/class-ipscanner-admin.php:668
 #, php-format
 msgid "Saved, ends in %s"
 msgstr ""
 
-#: includes/class-ipscanner-admin.php:680
+#: includes/class-ipscanner-admin.php:666
 msgid "Or paste an API key:"
 msgstr ""
 
-#: includes/class-ipscanner-admin.php:684
+#: includes/class-ipscanner-admin.php:670
 msgid "Remove"
 msgstr ""
 
 #. translators: %s: link to the API keys page
-#: includes/class-ipscanner-admin.php:691
+#: includes/class-ipscanner-admin.php:677
 #, php-format
 msgid "Get a key at %s."
 msgstr ""
 
-#: includes/class-ipscanner-admin.php:696
+#: includes/class-ipscanner-admin.php:682
 msgid "Each new visitor check uses 2 requests. Results are cached for 10 minutes per visitor."
 msgstr ""
 
-#: includes/class-ipscanner-admin.php:701
+#: includes/class-ipscanner-admin.php:687
 msgid "Test connection"
 msgstr ""
 
-#: includes/class-ipscanner-admin.php:706
+#: includes/class-ipscanner-admin.php:692
 msgid "Site ID"
 msgstr ""
 
 #. translators: %s: link to the IPScanner dashboard
-#: includes/class-ipscanner-admin.php:713
+#: includes/class-ipscanner-admin.php:699
 #, php-format
 msgid "Optional. With a Site ID, mode and per class policy come from the %s and the mode and block settings below are ignored."
 msgstr ""
 
-#: includes/class-ipscanner-admin.php:714
+#: includes/class-ipscanner-admin.php:700
 msgid "IPScanner dashboard"
 msgstr ""
 
-#: includes/class-ipscanner-admin.php:722
+#: includes/class-ipscanner-admin.php:708
 msgid "Protection"
 msgstr ""
 
-#: includes/class-ipscanner-admin.php:725
+#: includes/class-ipscanner-admin.php:711
 msgid "Mode"
 msgstr ""
 
-#: includes/class-ipscanner-admin.php:728
+#: includes/class-ipscanner-admin.php:714
 msgid "Monitor: record decisions, block nothing"
 msgstr ""
 
-#: includes/class-ipscanner-admin.php:729
+#: includes/class-ipscanner-admin.php:715
 msgid "Block: stop the classes selected below"
 msgstr ""
 
-#: includes/class-ipscanner-admin.php:738
+#: includes/class-ipscanner-admin.php:717
+msgid "Needs credits"
+msgstr ""
+
+#: includes/class-ipscanner-admin.php:724
 msgid "Protected areas"
 msgstr ""
 
-#: includes/class-ipscanner-admin.php:744
+#: includes/class-ipscanner-admin.php:730
 msgid "(WooCommerce is not active)"
 msgstr ""
 
-#: includes/class-ipscanner-admin.php:749
+#: includes/class-ipscanner-admin.php:735
 msgid "Forms are checked when submitted. The whole site option checks every page view."
 msgstr ""
 
-#: includes/class-ipscanner-admin.php:753
+#: includes/class-ipscanner-admin.php:739
 msgid "Block"
 msgstr ""
 
-#: includes/class-ipscanner-admin.php:763
+#: includes/class-ipscanner-admin.php:749
 msgid "Verified search engine and AI crawlers always pass."
 msgstr ""
 
-#: includes/class-ipscanner-admin.php:768
+#: includes/class-ipscanner-admin.php:754
 msgid "Visitors and IPs"
 msgstr ""
 
-#: includes/class-ipscanner-admin.php:771
+#: includes/class-ipscanner-admin.php:757
 msgid "Always allow"
 msgstr ""
 
-#: includes/class-ipscanner-admin.php:774
+#: includes/class-ipscanner-admin.php:760
 msgid "IP addresses or CIDR ranges, one per line. Not checked and never blocked."
 msgstr ""
 
-#: includes/class-ipscanner-admin.php:775
+#: includes/class-ipscanner-admin.php:761
 msgid "Always allow administrators"
 msgstr ""
 
-#: includes/class-ipscanner-admin.php:779
+#: includes/class-ipscanner-admin.php:765
 msgid "Visitor IP"
 msgstr ""
 
-#: includes/class-ipscanner-admin.php:782
+#: includes/class-ipscanner-admin.php:768
 msgid "Direct connection (REMOTE_ADDR)"
 msgstr ""
 
-#: includes/class-ipscanner-admin.php:783
+#: includes/class-ipscanner-admin.php:769
 msgid "Cloudflare (CF-Connecting-IP)"
 msgstr ""
 
-#: includes/class-ipscanner-admin.php:784
+#: includes/class-ipscanner-admin.php:770
 msgid "Proxy or load balancer (X-Forwarded-For)"
 msgstr ""
 
 #. translators: %s: visitor IP address
-#: includes/class-ipscanner-admin.php:789
+#: includes/class-ipscanner-admin.php:775
 #, php-format
 msgid "Your IP with this setting: %s"
 msgstr ""
 
-#: includes/class-ipscanner-admin.php:792
+#: includes/class-ipscanner-admin.php:778
 msgid "Trusted proxies"
 msgstr ""
 
-#: includes/class-ipscanner-admin.php:794
+#: includes/class-ipscanner-admin.php:780
 msgid "Proxy headers are read only from these addresses. Cloudflare ranges are built in."
 msgstr ""
 
-#: includes/class-ipscanner-admin.php:799
+#: includes/class-ipscanner-admin.php:785
 msgid "Block page"
 msgstr ""
 
-#: includes/class-ipscanner-admin.php:802
+#: includes/class-ipscanner-admin.php:788
 msgid "Block message"
 msgstr ""
 
-#: includes/class-ipscanner-admin.php:804
+#: includes/class-ipscanner-admin.php:790
 #: includes/class-ipscanner-guard.php:90
 msgid "Your request was blocked. If you think this is a mistake, contact the site owner."
 msgstr ""
 
-#: includes/class-ipscanner-admin.php:805
+#: includes/class-ipscanner-admin.php:791
 msgid "Show \"Protected by IPScanner\" on the block page"
 msgstr ""
 
-#: includes/class-ipscanner-admin.php:810
+#: includes/class-ipscanner-admin.php:796
 msgid "Advanced"
 msgstr ""
 
-#: includes/class-ipscanner-admin.php:813
+#: includes/class-ipscanner-admin.php:799
 msgid "Timeout"
 msgstr ""
 
-#: includes/class-ipscanner-admin.php:815
+#: includes/class-ipscanner-admin.php:801
 msgid "seconds"
 msgstr ""
 
-#: includes/class-ipscanner-admin.php:816
+#: includes/class-ipscanner-admin.php:802
 msgid "If IPScanner does not answer in time, the visitor is allowed."
 msgstr ""
 
-#: includes/class-ipscanner-admin.php:820
+#: includes/class-ipscanner-admin.php:806
 msgid "Usage stats"
 msgstr ""
 
-#: includes/class-ipscanner-admin.php:822
+#: includes/class-ipscanner-admin.php:808
 msgid "Send plugin usage stats to IPScanner"
 msgstr ""
 
-#: includes/class-ipscanner-admin.php:823
+#: includes/class-ipscanner-admin.php:809
 msgid "Settings changes, connection tests and daily totals. No visitor data."
 msgstr ""
 
-#: includes/class-ipscanner-admin.php:848
+#: includes/class-ipscanner-admin.php:834
 msgid "No decisions yet."
 msgstr ""
 
-#: includes/class-ipscanner-admin.php:851
+#: includes/class-ipscanner-admin.php:837
 msgid "Test visit"
 msgstr ""
 
-#: includes/class-ipscanner-admin.php:854
+#: includes/class-ipscanner-admin.php:840
 msgid "API timeout, allowed"
 msgstr ""
 
-#: includes/class-ipscanner-admin.php:855
+#: includes/class-ipscanner-admin.php:841
 msgid "API error, allowed"
 msgstr ""
 
-#: includes/class-ipscanner-admin.php:856
+#: includes/class-ipscanner-admin.php:842
 msgid "Allowlist"
 msgstr ""
 
-#: includes/class-ipscanner-admin.php:863
+#: includes/class-ipscanner-admin.php:849
 msgid "Time"
 msgstr ""
 
-#: includes/class-ipscanner-admin.php:864
+#: includes/class-ipscanner-admin.php:850
 msgid "IP"
 msgstr ""
 
-#: includes/class-ipscanner-admin.php:865
+#: includes/class-ipscanner-admin.php:851
 msgid "Class"
 msgstr ""
 
-#: includes/class-ipscanner-admin.php:866
+#: includes/class-ipscanner-admin.php:852
 msgid "Action"
 msgstr ""
 
-#: includes/class-ipscanner-admin.php:867
+#: includes/class-ipscanner-admin.php:853
 msgid "Where"
 msgstr ""
 
-#: includes/class-ipscanner-admin.php:931
+#: includes/class-ipscanner-admin.php:917
 #: includes/class-ipscanner-connect.php:122
 msgid "You are not allowed to do this."
 msgstr ""
 
 #. translators: 1: plan name, 2: requests used
-#: includes/class-ipscanner-admin.php:950
+#: includes/class-ipscanner-admin.php:936
 #, php-format
 msgid "Connected. Plan: %1$s. Used this month: %2$s requests."
 msgstr ""
 
 #. translators: 1: plan name, 2: requests used, 3: monthly limit, 4: reset date
-#: includes/class-ipscanner-admin.php:954
+#: includes/class-ipscanner-admin.php:940
 #, php-format
 msgid "Connected. Plan: %1$s. Used %2$s of %3$s requests this month, resets %4$s."
 msgstr ""
 
 #. translators: 1: site ID, 2: mode, 3: policy version, 4: blocked classes
-#: includes/class-ipscanner-admin.php:982
+#: includes/class-ipscanner-admin.php:968
 #, php-format
 msgid "Site %1$s: %2$s mode, policy version %3$d. Blocked classes: %4$s."
 msgstr ""
 
-#: includes/class-ipscanner-admin.php:986
+#: includes/class-ipscanner-admin.php:972
 msgid "none"
 msgstr ""
 
 #. translators: %s: site ID
-#: includes/class-ipscanner-admin.php:993
+#: includes/class-ipscanner-admin.php:979
 #, php-format
 msgid "Site %s was not found on this account."
 msgstr ""
 
-#: includes/class-ipscanner-admin.php:1060
+#: includes/class-ipscanner-admin.php:1046
 msgid "Saved. Block mode is on."
 msgstr ""
 
-#: includes/class-ipscanner-admin.php:1061
+#: includes/class-ipscanner-admin.php:1047
 msgid "Saved. Monitor mode is on: decisions are recorded, nothing is blocked."
 msgstr ""
 
-#: includes/class-ipscanner-admin.php:1089
+#: includes/class-ipscanner-admin.php:1075
 msgid "The API key was rejected."
 msgstr ""
 
-#: includes/class-ipscanner-admin.php:1092
+#: includes/class-ipscanner-admin.php:1078
 msgid "The monthly allowance is used up. Visitors are allowed until it resets."
 msgstr ""
 
 #. translators: %s: error message
-#: includes/class-ipscanner-admin.php:1096
+#: includes/class-ipscanner-admin.php:1082
 #: includes/class-ipscanner-connect.php:247
 #, php-format
 msgid "Could not reach IPScanner: %s"
 msgstr ""
 
 #. translators: 1: HTTP status, 2: error message
-#: includes/class-ipscanner-admin.php:1099
+#: includes/class-ipscanner-admin.php:1085
 #, php-format
 msgid "IPScanner answered %1$d. %2$s"
 msgstr ""
 
-#: includes/class-ipscanner-admin.php:1122
+#: includes/class-ipscanner-admin.php:1108
 msgid "Test visit from a bot: blocked."
 msgstr ""
 
-#: includes/class-ipscanner-admin.php:1123
+#: includes/class-ipscanner-admin.php:1109
 msgid "Test visit from a bot: would be blocked (Monitor mode)."
 msgstr ""
 
-#: includes/class-ipscanner-admin.php:1124
+#: includes/class-ipscanner-admin.php:1110
 msgid "Test visit from a bot: flagged."
 msgstr ""
 
-#: includes/class-ipscanner-admin.php:1125
+#: includes/class-ipscanner-admin.php:1111
 msgid "Test visit from a bot: would be flagged (Monitor mode)."
 msgstr ""
 
-#: includes/class-ipscanner-admin.php:1126
+#: includes/class-ipscanner-admin.php:1112
 msgid "Test visit from a bot: allowed."
 msgstr ""
 
-#: includes/class-ipscanner-admin.php:1136
+#: includes/class-ipscanner-admin.php:1122
 msgid "The test visit failed: no answer from the IPScanner API."
 msgstr ""
 
 #. translators: %s: number of visitors blocked or flagged
-#: includes/class-ipscanner-admin.php:1223
+#: includes/class-ipscanner-admin.php:1209
 #, php-format
 msgid "IPScanner has flagged %s automated bot or risky IP on your site so far. If it's saving you headaches, would you mind leaving a quick review on WordPress.org? It helps other site owners find us."
 msgid_plural "IPScanner has flagged %s automated bots and risky IPs on your site so far. If it's saving you headaches, would you mind leaving a quick review on WordPress.org? It helps other site owners find us."
 msgstr[0] ""
 msgstr[1] ""
 
-#: includes/class-ipscanner-admin.php:1233
+#: includes/class-ipscanner-admin.php:1219
 msgid "Leave a review on WordPress.org"
 msgstr ""
 
-#: includes/class-ipscanner-admin.php:1234
+#: includes/class-ipscanner-admin.php:1220
 msgid "I already did"
 msgstr ""
 
-#: includes/class-ipscanner-admin.php:1235
+#: includes/class-ipscanner-admin.php:1221
 msgid "Maybe later"
 msgstr ""
 
-#: includes/class-ipscanner-admin.php:1258
+#: includes/class-ipscanner-admin.php:1244
 msgid "Not connected."
 msgstr ""
 
-#: includes/class-ipscanner-admin.php:1260
+#: includes/class-ipscanner-admin.php:1246
 msgid "Set up"
 msgstr ""
 
-#: includes/class-ipscanner-admin.php:1273
+#: includes/class-ipscanner-admin.php:1259
 msgid "Checked, 24h"
 msgstr ""
 
-#: includes/class-ipscanner-admin.php:1309
+#: includes/class-ipscanner-admin.php:1295
 msgid "IPScanner is not checking visitors yet."
 msgstr ""
 
-#: includes/class-ipscanner-admin.php:1311
+#: includes/class-ipscanner-admin.php:1297
 msgid "Add your API key"
 msgstr ""
 
-#: includes/class-ipscanner-admin.php:1326
+#: includes/class-ipscanner-admin.php:1312
 msgid "IPScanner:"
 msgstr ""
 

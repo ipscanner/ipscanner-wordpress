@@ -16,7 +16,7 @@ final class IPScanner_Admin {
 	const DASHBOARD_URL = 'https://ipscanner.io/dashboard/sites';
 	const KEYS_URL      = 'https://ipscanner.io/dashboard/apikeys';
 	const NEW_SITE_URL  = 'https://ipscanner.io/dashboard/sites?new=wordpress';
-	const PRICING_URL   = 'https://ipscanner.io/pricing';
+	const CREDITS_URL   = 'https://ipscanner.io/dashboard/billing?card=1';
 	const ONBOARDING    = 'ipscanner_onboarding';
 	const USAGE         = 'ipscanner_usage';
 	const LOG_ROWS      = 10;
@@ -310,35 +310,21 @@ final class IPScanner_Admin {
 	}
 
 	/**
-	 * One line on the plan's mode: the trial's end date while it runs, and that
-	 * nothing is blocked once it has ended.
+	 * One line, shown while the account cannot block, linking to free credits.
 	 *
-	 * @param string     $css_class Paragraph class.
-	 * @param array|null $usage     Cached usage result, or null.
+	 * @param string $css_class Paragraph class.
 	 */
-	private function plan_mode_note( $css_class, $usage ) {
-		$ends = is_array( $usage ) && $usage['ok'] && ! empty( $usage['data']['trialEndsAt'] ) ? strtotime( (string) $usage['data']['trialEndsAt'] ) : false;
-		if ( IPScanner_API::edge_monitor() ) {
-			/* translators: %s: link to the pricing page */
-			$text = esc_html__( 'Your trial has ended, so nothing is blocked. %s to block again.', 'ipscanner-bot-blocker' );
-			$link = esc_html__( 'Upgrade to Starter', 'ipscanner-bot-blocker' );
-		} elseif ( $ends ) {
-			/* translators: 1: date the trial ends, 2: link to the pricing page */
-			$text = esc_html__( 'Your Starter trial ends on %1$s. After that, nothing is blocked until you %2$s.', 'ipscanner-bot-blocker' );
-			$link = esc_html__( 'upgrade', 'ipscanner-bot-blocker' );
-		} else {
+	private function plan_mode_note( $css_class ) {
+		if ( ! IPScanner_API::edge_monitor() ) {
 			return;
 		}
-		$anchor = '<a href="' . esc_url( self::PRICING_URL ) . '" target="_blank" rel="noopener">' . $link . '</a>';
+		/* translators: %s: link to claim free credits */
+		$text   = esc_html__( 'Nothing is blocked right now. %s to turn blocking on.', 'ipscanner-bot-blocker' );
+		$link   = esc_html__( 'Get 25,000 free credits', 'ipscanner-bot-blocker' );
+		$anchor = '<a href="' . esc_url( self::CREDITS_URL ) . '" target="_blank" rel="noopener">' . $link . '</a>';
 		?>
 		<p class="<?php echo esc_attr( $css_class ); ?>">
-			<?php
-			if ( IPScanner_API::edge_monitor() ) {
-				printf( $text, $anchor ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Escaped above.
-			} else {
-				printf( $text, esc_html( wp_date( get_option( 'date_format' ), $ends ) ), $anchor ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Escaped above.
-			}
-			?>
+			<?php printf( $text, $anchor ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Escaped above. ?>
 		</p>
 		<?php
 	}
@@ -552,7 +538,7 @@ final class IPScanner_Admin {
 				}
 				?>
 			</p>
-			<?php $this->plan_mode_note( 'ipscanner-muted', $usage ); ?>
+			<?php $this->plan_mode_note( 'ipscanner-muted' ); ?>
 			<?php if ( '' === $site ) : ?>
 				<p class="ipscanner-muted">
 					<a href="<?php echo esc_url( self::NEW_SITE_URL ); ?>" target="_blank" rel="noopener"><?php esc_html_e( 'Add this site to the IPScanner dashboard for traffic charts', 'ipscanner-bot-blocker' ); ?></a>
@@ -645,7 +631,7 @@ final class IPScanner_Admin {
 	 * The settings form, in sections.
 	 */
 	private function render_settings() {
-		$usage    = $this->usage( true );
+		$this->usage( true );
 		$locked   = IPScanner_API::edge_monitor();
 		$s        = $this->settings->all();
 		$name     = IPScanner_Settings::OPTION;
@@ -728,10 +714,10 @@ final class IPScanner_Admin {
 							<label><input type="radio" name="<?php echo esc_attr( $name ); ?>[mode]" value="monitor" <?php checked( $s['mode'], 'monitor' ); ?>> <?php esc_html_e( 'Monitor: record decisions, block nothing', 'ipscanner-bot-blocker' ); ?></label><br>
 							<label<?php echo $locked ? ' class="ipscanner-muted"' : ''; ?>><input type="radio" name="<?php echo esc_attr( $name ); ?>[mode]" value="enforce" <?php checked( $s['mode'], 'enforce' ); ?> <?php disabled( $locked ); ?>> <?php esc_html_e( 'Block: stop the classes selected below', 'ipscanner-bot-blocker' ); ?></label>
 							<?php if ( $locked ) : ?>
-								<span class="ipscanner-chip">Starter</span>
+								<span class="ipscanner-chip"><?php esc_html_e( 'Needs credits', 'ipscanner-bot-blocker' ); ?></span>
 							<?php endif; ?>
 						</fieldset>
-						<?php $this->plan_mode_note( 'description', $usage ); ?>
+						<?php $this->plan_mode_note( 'description' ); ?>
 					</td>
 				</tr>
 				<tr>

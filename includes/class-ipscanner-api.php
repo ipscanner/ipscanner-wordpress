@@ -175,8 +175,8 @@ class IPScanner_API {
 	}
 
 	/**
-	 * Stores the account's edge mode. When the plan stops allowing Enforce (the
-	 * trial ended), a local Enforce switches to Monitor, and back after an upgrade.
+	 * Stores the account's edge mode. On an account that cannot block (no credits),
+	 * a local Enforce switches to Monitor, and back once the account can block.
 	 *
 	 * @param mixed $mode monitor, enforce, or anything else from an older API.
 	 */
